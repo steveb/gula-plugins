@@ -10,11 +10,11 @@ vib_dmax = 1024;
 // enough buffer to move the phase of a 0.4Hz vibrato with SR 48kHz
 vib_offset_dmax = 131072;
 
-freq = hslider("freq [log][name: Frequency (Hz)][tooltip: Frequency of tremelo and vibrato]", 4.0, 0.4, 10.0 ,0.01);
-trem_depth = hslider("trem_depth [name: Tremelo Depth][tooltip: Depth of the tremelo", 0.24, 0.0, 1.0 ,0.02);
+freq = hslider("freq [log][name: Frequency (Hz)][tooltip: Frequency of tremolo and vibrato]", 4.0, 0.4, 10.0 ,0.01);
+trem_depth = hslider("trem_depth [name: Tremolo Depth][tooltip: Depth of the Tremolo", 0.24, 0.0, 1.0 ,0.02);
 
 vib_depth = hslider("vib_depth [name:Vibrato Depth][tooltip: Amount of pitch bend of the vibrato]", 0.12, 0.0, 1.0 ,0.02);
-vib_offset = hslider("vib_offset [name:Vibrato Offset][tooltip: Phase offset of the vibrato vs the tremelo]", 0.0, 0.0, 1.0, 0.01);
+vib_offset = hslider("vib_offset [name:Vibrato Offset][tooltip: Phase offset of the vibrato vs the tremolo]", 0.0, 0.0, 1.0, 0.01);
 
 delay_i = ba.lin2LogGain(vib_depth) * vib_dmax : si.smooth(0.999);
 vib_delay = vib_offset * ma.SR / freq : si.smooth(0.999);
