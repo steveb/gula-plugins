@@ -1,0 +1,34 @@
+@prefix modgui: <http://moddevices.com/ns/modgui#> .
+@prefix lv2:    <http://lv2plug.in/ns/lv2core#> .
+
+<https://github.com/steveb/vibey>
+    modgui:gui [
+        modgui:resourcesDirectory <modgui> ;
+        modgui:iconTemplate <modgui/icon-the-vibey.html> ;
+        modgui:stylesheet <modgui/stylesheet-the-vibey.css> ;
+        modgui:screenshot <modgui/screenshot-the-vibey.png> ;
+        modgui:thumbnail <modgui/thumbnail-the-vibey.png> ;
+        modgui:brand "GULA" ;
+        modgui:label "The Vibey" ;
+        modgui:model "boxy" ;
+        modgui:panel "4-knobs" ;
+        modgui:color "dots" ;
+        modgui:knob "gold" ;
+        modgui:port [
+            lv2:index 0 ;
+            lv2:symbol "rate_0" ;
+            lv2:name "RATE" ;
+        ] , [
+            lv2:index 1 ;
+            lv2:symbol "trem_depth_1" ;
+            lv2:name "T DEPTH" ;
+        ] , [
+            lv2:index 2 ;
+            lv2:symbol "vib_depth_2" ;
+            lv2:name "V DEPTH" ;
+        ] , [
+            lv2:index 3 ;
+            lv2:symbol "vib_offset_3" ;
+            lv2:name "V OFFSET" ;
+        ] ;
+    ] .

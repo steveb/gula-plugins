@@ -10,7 +10,7 @@ vib_dmax = 1024;
 // enough buffer to move the phase of a 0.4Hz vibrato with SR 48kHz
 vib_offset_dmax = 131072;
 
-freq = hslider("freq [log][name: Frequency (Hz)][tooltip: Frequency of tremolo and vibrato]", 4.0, 0.4, 10.0 ,0.01);
+freq = hslider("rate [log][name: Rate][tooltip: Frequency of tremolo and vibrato]", 4.0, 0.4, 10.0 ,0.01);
 trem_depth = hslider("trem_depth [name: Tremolo Depth][tooltip: Depth of the Tremolo", 0.24, 0.0, 1.0 ,0.02);
 
 vib_depth = hslider("vib_depth [name:Vibrato Depth][tooltip: Amount of pitch bend of the vibrato]", 0.12, 0.0, 1.0 ,0.02);
