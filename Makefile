@@ -8,3 +8,6 @@ vibey.lv2/vibey.so:
 
 clean:
 	rm vibey.lv2/vibey.so
+
+clean-build:
+	rm -rf vibey.lv2-faust
