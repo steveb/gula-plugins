@@ -1,13 +1,23 @@
 
-vibey.lv2/vibey.so:
-	mv vibey.lv2 vibey.lv2-orig
-	faust2lv2 -keep -uri-prefix https://github.com/steveb vibey.dsp
-	mv vibey.lv2 vibey.lv2-faust
-	mv vibey.lv2-orig vibey.lv2
-	cp vibey.lv2-faust/vibey.so vibey.lv2/vibey.so
+all: vibey
+
+vibey: vibey.lv2/vibey.so
+
+vibey.lv2/vibey.so: build
+	cd build && \
+	faust2lv2 -keep \
+	          -uri-prefix https://github.com/steveb \
+			  vibey.dsp
+	cp build/vibey.lv2/vibey.so vibey.lv2/vibey.so
+
+build:
+	mkdir build
+	cp -r src/* build/
 
 clean:
-	rm vibey.lv2/vibey.so
+	rm -f *.lv2/*.so
 
 clean-build:
-	rm -rf vibey.lv2-faust
+	rm -rf build
+
+clean-all: clean clean-build
