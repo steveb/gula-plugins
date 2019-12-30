@@ -1,7 +1,7 @@
 @prefix modgui: <http://moddevices.com/ns/modgui#> .
 @prefix lv2:    <http://lv2plug.in/ns/lv2core#> .
 
-<https://github.com/steveb/vibey>
+<https://github.com/steveb/gula-plugins/vibey>
     modgui:gui [
         modgui:resourcesDirectory <modgui> ;
         modgui:iconTemplate <modgui/icon-the-vibey.html> ;
