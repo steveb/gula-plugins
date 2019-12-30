@@ -7,7 +7,7 @@ FAUSTINC = $(subst share,include,$(FAUSTLIB))
 FAUSTTOOLSFLAGS =
 
 PROCARCH = -fPIC
-CXXFLAGS = -O3 -std=c++11 -mfpmath=sse -msse -msse2 -msse3 -ffast-math -ftree-vectorize
+CXXFLAGS = -O3 -std=c++11 -ffast-math -ftree-vectorize
 CXX = g++
 CPPFLAGS = -DURI_PREFIX=\"$(URI_PREFIX)\" -DFAUST_META=1 -DFAUST_MIDICC=0 -DFAUST_MTS=0
 
@@ -16,6 +16,8 @@ cppsrc := $(plugins:.lv2=.cpp)
 buildlibs := $(plugins:.lv2=.so)
 
 all: $(buildlibs)
+
+.PRECIOUS: $(cppsrc)
 
 %.so: %.cpp
 	$(CXX) -shared $(CXXFLAGS) $(FAUSTTOOLSFLAGS) $(PROCARCH) $(CPPFLAGS) $^ -o $@
