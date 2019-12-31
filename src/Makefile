@@ -21,7 +21,7 @@ all: $(buildlibs)
 
 %.so: %.cpp
 	$(CXX) -shared $(CXXFLAGS) $(FAUSTTOOLSFLAGS) $(PROCARCH) $(CPPFLAGS) $^ -o $@
-	cp $@ $*.lv2/
+	cp $@ ../lv2/$*.lv2/
 
 %.cpp: %.dsp
 	faust -i -a "$(FAUSTLIB)/$(FAUSTARCH)" -cn $* $< -o $@

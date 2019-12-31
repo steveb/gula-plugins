@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------
-author: "Steve Baker"
+author: "Gula Plugins"
 copyright: "Steve Baker (2019)"
 license: "GPLv3"
 name: "The Vibey"
@@ -683,29 +683,32 @@ class vibey : public dsp {
  private:
 	
 	FAUSTFLOAT fHslider0;
+	FAUSTFLOAT fHslider1;
+	FAUSTFLOAT fHslider2;
 	int fSampleRate;
 	float fConst0;
 	float fConst1;
-	FAUSTFLOAT fHslider1;
+	FAUSTFLOAT fHslider3;
 	float fRec1[2];
 	int IOTA;
 	float fVec0[262144];
 	float fVec1[2048];
-	FAUSTFLOAT fHslider2;
+	FAUSTFLOAT fHslider4;
 	float fRec2[2];
 	float fConst2;
-	FAUSTFLOAT fHslider3;
+	FAUSTFLOAT fHslider5;
 	float fRec3[2];
 	
  public:
 	
 	void metadata(Meta* m) { 
-		m->declare("author", "Steve Baker");
+		m->declare("author", "Gula Plugins");
 		m->declare("basics.lib/name", "Faust Basic Element Library");
 		m->declare("basics.lib/version", "0.1");
 		m->declare("copyright", "Steve Baker (2019)");
 		m->declare("delays.lib/name", "Faust Delay Library");
 		m->declare("delays.lib/version", "0.1");
+		m->declare("description", "An LV2 plugin which is a combination of vibrato and tremolo");
 		m->declare("filename", "vibey.dsp");
 		m->declare("license", "GPLv3");
 		m->declare("maths.lib/author", "GRAME");
@@ -771,10 +774,12 @@ class vibey : public dsp {
 	}
 	
 	virtual void instanceResetUserInterface() {
-		fHslider0 = FAUSTFLOAT(0.23999999999999999f);
-		fHslider1 = FAUSTFLOAT(4.0f);
-		fHslider2 = FAUSTFLOAT(0.12f);
-		fHslider3 = FAUSTFLOAT(0.0f);
+		fHslider0 = FAUSTFLOAT(0.0f);
+		fHslider1 = FAUSTFLOAT(0.0f);
+		fHslider2 = FAUSTFLOAT(0.23999999999999999f);
+		fHslider3 = FAUSTFLOAT(4.0f);
+		fHslider4 = FAUSTFLOAT(0.12f);
+		fHslider5 = FAUSTFLOAT(0.0f);
 	}
 	
 	virtual void instanceClear() {
@@ -816,38 +821,46 @@ class vibey : public dsp {
 	
 	virtual void buildUserInterface(UI* ui_interface) {
 		ui_interface->openVerticalBox("The Vibey");
-		ui_interface->declare(&fHslider1, "log", "");
-		ui_interface->declare(&fHslider1, "name", "Rate");
-		ui_interface->declare(&fHslider1, "tooltip", "Frequency of tremolo and vibrato");
-		ui_interface->addHorizontalSlider("rate", &fHslider1, 4.0f, 0.400000006f, 10.0f, 0.00999999978f);
-		ui_interface->declare(&fHslider0, "name", "Tremolo Depth");
-		ui_interface->addHorizontalSlider("trem_depth", &fHslider0, 0.239999995f, 0.0f, 1.0f, 0.0199999996f);
-		ui_interface->declare(&fHslider2, "name", "Vibrato Depth");
-		ui_interface->declare(&fHslider2, "tooltip", "Amount of pitch bend of the vibrato");
-		ui_interface->addHorizontalSlider("vib_depth", &fHslider2, 0.119999997f, 0.0f, 1.0f, 0.0199999996f);
-		ui_interface->declare(&fHslider3, "name", "Vibrato Offset");
-		ui_interface->declare(&fHslider3, "tooltip", "Phase offset of the vibrato vs the tremolo");
-		ui_interface->addHorizontalSlider("vib_offset", &fHslider3, 0.0f, 0.0f, 1.0f, 0.00999999978f);
+		ui_interface->declare(&fHslider3, "log", "");
+		ui_interface->declare(&fHslider3, "name", "Rate");
+		ui_interface->declare(&fHslider3, "tooltip", "Frequency of tremolo and vibrato");
+		ui_interface->addHorizontalSlider("rate", &fHslider3, 4.0f, 0.400000006f, 10.0f, 0.00999999978f);
+		ui_interface->declare(&fHslider2, "name", "Tremolo Depth");
+		ui_interface->declare(&fHslider2, "tooltip", "Depth of the Tremolo");
+		ui_interface->addHorizontalSlider("trem_depth", &fHslider2, 0.239999995f, 0.0f, 1.0f, 0.00999999978f);
+		ui_interface->declare(&fHslider1, "name", "Tremolo Shape");
+		ui_interface->declare(&fHslider1, "tooltip", "Wave shape of tremelo");
+		ui_interface->addHorizontalSlider("trem_shape", &fHslider1, 0.0f, 0.0f, 3.0f, 0.00999999978f);
+		ui_interface->declare(&fHslider0, "name", "Tremolo Slant");
+		ui_interface->declare(&fHslider0, "tooltip", "Amount of slant to the left or right of the wave shape");
+		ui_interface->addHorizontalSlider("trem_slant", &fHslider0, 0.0f, -1.0f, 1.0f, 0.00999999978f);
+		ui_interface->declare(&fHslider4, "name", "Vibrato Depth");
+		ui_interface->declare(&fHslider4, "tooltip", "Amount of pitch bend of the vibrato");
+		ui_interface->addHorizontalSlider("vib_depth", &fHslider4, 0.119999997f, 0.0f, 1.0f, 0.00999999978f);
+		ui_interface->declare(&fHslider5, "name", "Vibrato Offset");
+		ui_interface->declare(&fHslider5, "tooltip", "Phase offset of the vibrato vs the tremolo");
+		ui_interface->addHorizontalSlider("vib_offset", &fHslider5, 0.0f, 0.0f, 1.0f, 0.00999999978f);
 		ui_interface->closeBox();
 	}
 	
 	virtual void compute(int count, FAUSTFLOAT** inputs, FAUSTFLOAT** outputs) {
 		FAUSTFLOAT* input0 = inputs[0];
 		FAUSTFLOAT* output0 = outputs[0];
-		float fSlow0 = vibey_faustpower2_f((1.0f - float(fHslider0)));
-		float fSlow1 = (0.5f * (1.0f - fSlow0));
-		float fSlow2 = float(fHslider1);
-		float fSlow3 = (fConst1 * fSlow2);
-		float fSlow4 = (1.02400005f * vibey_faustpower2_f(float(fHslider2)));
-		float fSlow5 = (fConst2 * (float(fHslider3) / fSlow2));
+		float fSlow0 = (float(fHslider0) + float(fHslider1));
+		float fSlow1 = vibey_faustpower2_f((1.0f - float(fHslider2)));
+		float fSlow2 = (0.5f * (1.0f - fSlow1));
+		float fSlow3 = float(fHslider3);
+		float fSlow4 = (fConst1 * fSlow3);
+		float fSlow5 = (1.02400005f * vibey_faustpower2_f(float(fHslider4)));
+		float fSlow6 = (fConst2 * (float(fHslider5) / fSlow3));
 		for (int i = 0; (i < count); i = (i + 1)) {
-			fRec1[0] = (fSlow3 + (fRec1[1] - std::floor((fSlow3 + fRec1[1]))));
+			fRec1[0] = (fSlow4 + (fRec1[1] - std::floor((fSlow4 + fRec1[1]))));
 			float fTemp0 = vibey_faustpower2_f(ftbl0vibeySIG0[int((65536.0f * fRec1[0]))]);
 			fVec0[(IOTA & 262143)] = fTemp0;
 			float fTemp1 = float(input0[i]);
 			fVec1[(IOTA & 2047)] = fTemp1;
-			fRec2[0] = (fSlow4 + (0.999000013f * fRec2[1]));
-			fRec3[0] = (fSlow5 + (0.999000013f * fRec3[1]));
+			fRec2[0] = (fSlow5 + (0.999000013f * fRec2[1]));
+			fRec3[0] = (fSlow6 + (0.999000013f * fRec3[1]));
 			float fTemp2 = std::min<float>(131072.0f, fRec3[0]);
 			float fTemp3 = (fTemp2 + -0.999994993f);
 			int iTemp4 = int(fTemp3);
@@ -862,7 +875,7 @@ class vibey : public dsp {
 			float fTemp13 = (fTemp9 + (-1.0f - fTemp12));
 			float fTemp14 = (fTemp9 + (-2.0f - fTemp12));
 			float fTemp15 = (fTemp9 + (-3.0f - fTemp12));
-			output0[i] = FAUSTFLOAT(((fSlow0 + (fSlow1 * (fTemp0 + 1.0f))) * ((((fVec1[((IOTA - std::min<int>(1024, std::max<int>(0, iTemp11))) & 2047)] * (0.0f - fTemp13)) * (0.0f - (0.5f * fTemp14))) * (0.0f - (0.333333343f * fTemp15))) + ((fTemp9 - fTemp12) * ((((fVec1[((IOTA - std::min<int>(1024, std::max<int>(0, (iTemp11 + 1)))) & 2047)] * (0.0f - fTemp14)) * (0.0f - (0.5f * fTemp15))) + (0.5f * ((fTemp13 * fVec1[((IOTA - std::min<int>(1024, std::max<int>(0, (iTemp11 + 2)))) & 2047)]) * (0.0f - fTemp15)))) + (0.166666672f * ((fTemp13 * fTemp14) * fVec1[((IOTA - std::min<int>(1024, std::max<int>(0, (iTemp11 + 3)))) & 2047)])))))));
+			output0[i] = FAUSTFLOAT((fSlow0 + ((fSlow1 + (fSlow2 * (fTemp0 + 1.0f))) * ((((fVec1[((IOTA - std::min<int>(1024, std::max<int>(0, iTemp11))) & 2047)] * (0.0f - fTemp13)) * (0.0f - (0.5f * fTemp14))) * (0.0f - (0.333333343f * fTemp15))) + ((fTemp9 - fTemp12) * ((((fVec1[((IOTA - std::min<int>(1024, std::max<int>(0, (iTemp11 + 1)))) & 2047)] * (0.0f - fTemp14)) * (0.0f - (0.5f * fTemp15))) + (0.5f * ((fTemp13 * fVec1[((IOTA - std::min<int>(1024, std::max<int>(0, (iTemp11 + 2)))) & 2047)]) * (0.0f - fTemp15)))) + (0.166666672f * ((fTemp13 * fTemp14) * fVec1[((IOTA - std::min<int>(1024, std::max<int>(0, (iTemp11 + 3)))) & 2047)]))))))));
 			fRec1[1] = fRec1[0];
 			IOTA = (IOTA + 1);
 			fRec2[1] = fRec2[0];
