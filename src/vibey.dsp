@@ -37,5 +37,5 @@ vib_amp = ba.lin2LogGain(vib_depth) * vib_dmax : si.smooth(0.999);
 vib_osc = (os.oscp(freq, 6.28318 * vib_offset : si.smooth(0.999)) + 1.0) * vib_amp / 2.0;
 vibrato = de.fdelayltv(3, vib_dmax, min(vib_dmax, vib_osc));
 
-// process = os.osc(440) <: trem * vibrato, (1-trem) * vibrato;
-process = _ <: trem * vibrato, (1-trem) * vibrato;
+// process = os.osc(440) <: trem * vibrato, (1-trem) * vibrato : _,_;
+process = _ <: trem * vibrato, (1-trem) * vibrato : _,_;

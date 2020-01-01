@@ -14,10 +14,12 @@ desired LV2 plugin directory.
 The Vibey
 =========
 
-An LV2 plugin which is a combination of vibrato and tremolo. The depth of each
-can be controlled and the phase offset of the vibrato can be set relative to
-the tremolo.
-
+An LV2 plugin which is a combination of vibrato and tremolo. The depth of
+each can be controlled and the phase offset of the vibrato can be set
+relative to the tremolo. The tremolo waveform can be a blend of sine,
+sawtooth, triangle and square waves. The output is stereo with the tremolo
+allocating between the left and right channels. The right channel can be
+ignored for a mono tremolo effect.
 
 .. _Faust installation: https://faust.grame.fr/doc/manual/index.html#compiling-and-installing-the-faust-compiler
 .. _MOD Devices: https://www.moddevices.com/
