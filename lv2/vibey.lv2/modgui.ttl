@@ -11,21 +11,21 @@
         modgui:brand "GULA" ;
         modgui:label "The Vibey" ;
         modgui:model "boxy" ;
-        modgui:panel "6-knobs" ;
+        modgui:panel "5-knobs" ;
         modgui:color "dots" ;
         modgui:knob "gold" ;
         modgui:port [
             lv2:index 0 ;
-            lv2:symbol "trem_depth_0" ;
-            lv2:name "T Depth" ;
+            lv2:symbol "rate_0" ;
+            lv2:name "Rate" ;
         ] , [
             lv2:index 1 ;
-            lv2:symbol "trem_shape_1" ;
-            lv2:name "T Shape" ;
+            lv2:symbol "trem_depth_1" ;
+            lv2:name "T Depth" ;
         ] , [
             lv2:index 2 ;
-            lv2:symbol "trem_slant_2" ;
-            lv2:name "T Slant" ;
+            lv2:symbol "trem_shape_2" ;
+            lv2:name "T Shape" ;
         ] , [
             lv2:index 3 ;
             lv2:symbol "vib_depth_3" ;
@@ -34,9 +34,5 @@
             lv2:index 4 ;
             lv2:symbol "vib_offset_4" ;
             lv2:name "V Offset" ;
-        ] , [
-            lv2:index 5 ;
-            lv2:symbol "rate_5" ;
-            lv2:name "Rate" ;
         ] ;
     ] .

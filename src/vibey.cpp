@@ -610,7 +610,7 @@ class vibeySIG0 {
 	
   private:
 	
-	int iRec0[2];
+	int iRec1[2];
 	
   public:
 	
@@ -647,15 +647,15 @@ class vibeySIG0 {
 	
 	void instanceInitvibeySIG0(int sample_rate) {
 		for (int l0 = 0; (l0 < 2); l0 = (l0 + 1)) {
-			iRec0[l0] = 0;
+			iRec1[l0] = 0;
 		}
 	}
 	
 	void fillvibeySIG0(int count, float* table) {
 		for (int i = 0; (i < count); i = (i + 1)) {
-			iRec0[0] = (iRec0[1] + 1);
-			table[i] = std::sin((9.58738019e-05f * float((iRec0[0] + -1))));
-			iRec0[1] = iRec0[0];
+			iRec1[0] = (iRec1[1] + 1);
+			table[i] = std::sin((9.58738019e-05f * float((iRec1[0] + -1))));
+			iRec1[1] = iRec1[0];
 		}
 	}
 
@@ -664,10 +664,69 @@ class vibeySIG0 {
 static vibeySIG0* newvibeySIG0() { return (vibeySIG0*)new vibeySIG0(); }
 static void deletevibeySIG0(vibeySIG0* dsp) { delete dsp; }
 
+class vibeySIG1 {
+	
+  private:
+	
+	int iRec6[2];
+	
+  public:
+	
+	int getNumInputsvibeySIG1() {
+		return 0;
+	}
+	int getNumOutputsvibeySIG1() {
+		return 1;
+	}
+	int getInputRatevibeySIG1(int channel) {
+		int rate;
+		switch ((channel)) {
+			default: {
+				rate = -1;
+				break;
+			}
+		}
+		return rate;
+	}
+	int getOutputRatevibeySIG1(int channel) {
+		int rate;
+		switch ((channel)) {
+			case 0: {
+				rate = 0;
+				break;
+			}
+			default: {
+				rate = -1;
+				break;
+			}
+		}
+		return rate;
+	}
+	
+	void instanceInitvibeySIG1(int sample_rate) {
+		for (int l8 = 0; (l8 < 2); l8 = (l8 + 1)) {
+			iRec6[l8] = 0;
+		}
+	}
+	
+	void fillvibeySIG1(int count, float* table) {
+		for (int i = 0; (i < count); i = (i + 1)) {
+			iRec6[0] = (iRec6[1] + 1);
+			table[i] = std::cos((9.58738019e-05f * float((iRec6[0] + -1))));
+			iRec6[1] = iRec6[0];
+		}
+	}
+
+};
+
+static vibeySIG1* newvibeySIG1() { return (vibeySIG1*)new vibeySIG1(); }
+static void deletevibeySIG1(vibeySIG1* dsp) { delete dsp; }
+
 static float vibey_faustpower2_f(float value) {
 	return (value * value);
 }
 static float ftbl0vibeySIG0[65536];
+static float ftbl1vibeySIG1[65536];
 
 #ifndef FAUSTCLASS 
 #define FAUSTCLASS vibey
@@ -684,20 +743,19 @@ class vibey : public dsp {
 	
 	FAUSTFLOAT fHslider0;
 	FAUSTFLOAT fHslider1;
-	FAUSTFLOAT fHslider2;
 	int fSampleRate;
 	float fConst0;
-	float fConst1;
-	FAUSTFLOAT fHslider3;
-	float fRec1[2];
-	int IOTA;
-	float fVec0[262144];
-	float fVec1[2048];
-	FAUSTFLOAT fHslider4;
+	FAUSTFLOAT fHslider2;
+	float fVec0[2];
 	float fRec2[2];
-	float fConst2;
-	FAUSTFLOAT fHslider5;
 	float fRec3[2];
+	float fRec0[2];
+	int IOTA;
+	float fVec1[2048];
+	FAUSTFLOAT fHslider3;
+	float fRec4[2];
+	FAUSTFLOAT fHslider4;
+	float fRec5[2];
 	
  public:
 	
@@ -728,7 +786,7 @@ class vibey : public dsp {
 		return 1;
 	}
 	virtual int getNumOutputs() {
-		return 1;
+		return 2;
 	}
 	virtual int getInputRate(int channel) {
 		int rate;
@@ -751,6 +809,10 @@ class vibey : public dsp {
 				rate = 1;
 				break;
 			}
+			case 1: {
+				rate = 1;
+				break;
+			}
 			default: {
 				rate = -1;
 				break;
@@ -763,41 +825,48 @@ class vibey : public dsp {
 		vibeySIG0* sig0 = newvibeySIG0();
 		sig0->instanceInitvibeySIG0(sample_rate);
 		sig0->fillvibeySIG0(65536, ftbl0vibeySIG0);
+		vibeySIG1* sig1 = newvibeySIG1();
+		sig1->instanceInitvibeySIG1(sample_rate);
+		sig1->fillvibeySIG1(65536, ftbl1vibeySIG1);
 		deletevibeySIG0(sig0);
+		deletevibeySIG1(sig1);
 	}
 	
 	virtual void instanceConstants(int sample_rate) {
 		fSampleRate = sample_rate;
-		fConst0 = std::min<float>(192000.0f, std::max<float>(1.0f, float(fSampleRate)));
-		fConst1 = (1.0f / fConst0);
-		fConst2 = (0.00100000005f * fConst0);
+		fConst0 = (1.0f / std::min<float>(192000.0f, std::max<float>(1.0f, float(fSampleRate))));
 	}
 	
 	virtual void instanceResetUserInterface() {
-		fHslider0 = FAUSTFLOAT(0.0f);
+		fHslider0 = FAUSTFLOAT(0.23999999999999999f);
 		fHslider1 = FAUSTFLOAT(0.0f);
-		fHslider2 = FAUSTFLOAT(0.23999999999999999f);
-		fHslider3 = FAUSTFLOAT(4.0f);
-		fHslider4 = FAUSTFLOAT(0.12f);
-		fHslider5 = FAUSTFLOAT(0.0f);
+		fHslider2 = FAUSTFLOAT(4.0f);
+		fHslider3 = FAUSTFLOAT(0.12f);
+		fHslider4 = FAUSTFLOAT(0.0f);
 	}
 	
 	virtual void instanceClear() {
 		for (int l1 = 0; (l1 < 2); l1 = (l1 + 1)) {
-			fRec1[l1] = 0.0f;
+			fVec0[l1] = 0.0f;
 		}
-		IOTA = 0;
-		for (int l2 = 0; (l2 < 262144); l2 = (l2 + 1)) {
-			fVec0[l2] = 0.0f;
+		for (int l2 = 0; (l2 < 2); l2 = (l2 + 1)) {
+			fRec2[l2] = 0.0f;
 		}
-		for (int l3 = 0; (l3 < 2048); l3 = (l3 + 1)) {
-			fVec1[l3] = 0.0f;
+		for (int l3 = 0; (l3 < 2); l3 = (l3 + 1)) {
+			fRec3[l3] = 0.0f;
 		}
 		for (int l4 = 0; (l4 < 2); l4 = (l4 + 1)) {
-			fRec2[l4] = 0.0f;
+			fRec0[l4] = 0.0f;
 		}
-		for (int l5 = 0; (l5 < 2); l5 = (l5 + 1)) {
-			fRec3[l5] = 0.0f;
+		IOTA = 0;
+		for (int l5 = 0; (l5 < 2048); l5 = (l5 + 1)) {
+			fVec1[l5] = 0.0f;
+		}
+		for (int l6 = 0; (l6 < 2); l6 = (l6 + 1)) {
+			fRec4[l6] = 0.0f;
+		}
+		for (int l7 = 0; (l7 < 2); l7 = (l7 + 1)) {
+			fRec5[l7] = 0.0f;
 		}
 	}
 	
@@ -821,65 +890,78 @@ class vibey : public dsp {
 	
 	virtual void buildUserInterface(UI* ui_interface) {
 		ui_interface->openVerticalBox("The Vibey");
-		ui_interface->declare(&fHslider3, "log", "");
-		ui_interface->declare(&fHslider3, "name", "Rate");
-		ui_interface->declare(&fHslider3, "tooltip", "Frequency of tremolo and vibrato");
-		ui_interface->addHorizontalSlider("rate", &fHslider3, 4.0f, 0.400000006f, 10.0f, 0.00999999978f);
-		ui_interface->declare(&fHslider2, "name", "Tremolo Depth");
-		ui_interface->declare(&fHslider2, "tooltip", "Depth of the Tremolo");
-		ui_interface->addHorizontalSlider("trem_depth", &fHslider2, 0.239999995f, 0.0f, 1.0f, 0.00999999978f);
+		ui_interface->declare(&fHslider2, "log", "");
+		ui_interface->declare(&fHslider2, "name", "Rate");
+		ui_interface->declare(&fHslider2, "tooltip", "Frequency of tremolo and vibrato");
+		ui_interface->addHorizontalSlider("rate", &fHslider2, 4.0f, 0.400000006f, 10.0f, 0.00999999978f);
+		ui_interface->declare(&fHslider0, "name", "Tremolo Depth");
+		ui_interface->declare(&fHslider0, "tooltip", "Depth of the Tremolo");
+		ui_interface->addHorizontalSlider("trem_depth", &fHslider0, 0.239999995f, 0.0f, 1.0f, 0.00999999978f);
 		ui_interface->declare(&fHslider1, "name", "Tremolo Shape");
 		ui_interface->declare(&fHslider1, "tooltip", "Wave shape of tremelo");
-		ui_interface->addHorizontalSlider("trem_shape", &fHslider1, 0.0f, 0.0f, 3.0f, 0.00999999978f);
-		ui_interface->declare(&fHslider0, "name", "Tremolo Slant");
-		ui_interface->declare(&fHslider0, "tooltip", "Amount of slant to the left or right of the wave shape");
-		ui_interface->addHorizontalSlider("trem_slant", &fHslider0, 0.0f, -1.0f, 1.0f, 0.00999999978f);
-		ui_interface->declare(&fHslider4, "name", "Vibrato Depth");
-		ui_interface->declare(&fHslider4, "tooltip", "Amount of pitch bend of the vibrato");
-		ui_interface->addHorizontalSlider("vib_depth", &fHslider4, 0.119999997f, 0.0f, 1.0f, 0.00999999978f);
-		ui_interface->declare(&fHslider5, "name", "Vibrato Offset");
-		ui_interface->declare(&fHslider5, "tooltip", "Phase offset of the vibrato vs the tremolo");
-		ui_interface->addHorizontalSlider("vib_offset", &fHslider5, 0.0f, 0.0f, 1.0f, 0.00999999978f);
+		ui_interface->addHorizontalSlider("trem_shape", &fHslider1, 0.0f, 0.0f, 4.98999977f, 0.00999999978f);
+		ui_interface->declare(&fHslider3, "name", "Vibrato Depth");
+		ui_interface->declare(&fHslider3, "tooltip", "Amount of pitch bend of the vibrato");
+		ui_interface->addHorizontalSlider("vib_depth", &fHslider3, 0.119999997f, 0.0f, 1.0f, 0.00999999978f);
+		ui_interface->declare(&fHslider4, "name", "Vibrato Offset");
+		ui_interface->declare(&fHslider4, "tooltip", "Phase offset of the vibrato vs the tremolo");
+		ui_interface->addHorizontalSlider("vib_offset", &fHslider4, 0.0f, 0.0f, 1.0f, 0.00999999978f);
 		ui_interface->closeBox();
 	}
 	
 	virtual void compute(int count, FAUSTFLOAT** inputs, FAUSTFLOAT** outputs) {
 		FAUSTFLOAT* input0 = inputs[0];
 		FAUSTFLOAT* output0 = outputs[0];
-		float fSlow0 = (float(fHslider0) + float(fHslider1));
-		float fSlow1 = vibey_faustpower2_f((1.0f - float(fHslider2)));
-		float fSlow2 = (0.5f * (1.0f - fSlow1));
-		float fSlow3 = float(fHslider3);
-		float fSlow4 = (fConst1 * fSlow3);
-		float fSlow5 = (1.02400005f * vibey_faustpower2_f(float(fHslider4)));
-		float fSlow6 = (fConst2 * (float(fHslider5) / fSlow3));
+		FAUSTFLOAT* output1 = outputs[1];
+		float fSlow0 = vibey_faustpower2_f((1.0f - float(fHslider0)));
+		float fSlow1 = (1.0f - fSlow0);
+		float fSlow2 = float(fHslider1);
+		float fSlow3 = std::floor(fSlow2);
+		float fSlow4 = (fSlow3 + (1.0f - fSlow2));
+		int iSlow5 = int(fSlow2);
+		int iSlow6 = (iSlow5 >= 3);
+		int iSlow7 = (iSlow5 >= 2);
+		int iSlow8 = (iSlow5 >= 1);
+		float fSlow9 = float(fHslider2);
+		float fSlow10 = (fConst0 * fSlow9);
+		int iSlow11 = (iSlow5 >= 4);
+		float fSlow12 = (fSlow2 - fSlow3);
+		float fSlow13 = (1.02400005f * vibey_faustpower2_f(float(fHslider3)));
+		float fSlow14 = (0.00628317986f * float(fHslider4));
 		for (int i = 0; (i < count); i = (i + 1)) {
-			fRec1[0] = (fSlow4 + (fRec1[1] - std::floor((fSlow4 + fRec1[1]))));
-			float fTemp0 = vibey_faustpower2_f(ftbl0vibeySIG0[int((65536.0f * fRec1[0]))]);
-			fVec0[(IOTA & 262143)] = fTemp0;
-			float fTemp1 = float(input0[i]);
-			fVec1[(IOTA & 2047)] = fTemp1;
-			fRec2[0] = (fSlow5 + (0.999000013f * fRec2[1]));
-			fRec3[0] = (fSlow6 + (0.999000013f * fRec3[1]));
-			float fTemp2 = std::min<float>(131072.0f, fRec3[0]);
-			float fTemp3 = (fTemp2 + -0.999994993f);
-			int iTemp4 = int(fTemp3);
-			float fTemp5 = std::floor(fTemp3);
-			float fTemp6 = (fTemp2 + (-1.0f - fTemp5));
-			float fTemp7 = (fTemp2 + (-2.0f - fTemp5));
-			float fTemp8 = (fTemp2 + (-3.0f - fTemp5));
-			float fTemp9 = std::min<float>(1024.0f, (0.5f * (fRec2[0] * (((((fVec0[((IOTA - std::min<int>(131072, std::max<int>(0, iTemp4))) & 262143)] * (0.0f - fTemp6)) * (0.0f - (0.5f * fTemp7))) * (0.0f - (0.333333343f * fTemp8))) + ((fTemp2 - fTemp5) * ((((fVec0[((IOTA - std::min<int>(131072, std::max<int>(0, (iTemp4 + 1)))) & 262143)] * (0.0f - fTemp7)) * (0.0f - (0.5f * fTemp8))) + (0.5f * ((fTemp6 * fVec0[((IOTA - std::min<int>(131072, std::max<int>(0, (iTemp4 + 2)))) & 262143)]) * (0.0f - fTemp8)))) + (0.166666672f * ((fTemp6 * fTemp7) * fVec0[((IOTA - std::min<int>(131072, std::max<int>(0, (iTemp4 + 3)))) & 262143)]))))) + 1.0f))));
+			fVec0[0] = fSlow9;
+			fRec2[0] = (fSlow10 + (fRec2[1] - std::floor((fSlow10 + fRec2[1]))));
+			int iTemp0 = int((65536.0f * fRec2[0]));
+			float fTemp1 = ftbl0vibeySIG0[iTemp0];
+			float fTemp2 = (0.5f * (fTemp1 + 1.0f));
+			float fTemp3 = (fRec3[1] + (fConst0 * fVec0[1]));
+			fRec3[0] = (fTemp3 - std::floor(fTemp3));
+			float fTemp4 = (1.0f - std::fabs(((2.0f * fRec3[0]) + -1.0f)));
+			float fTemp5 = (1.0f - fRec3[0]);
+			float fTemp6 = float((fRec3[0] <= 0.5f));
+			fRec0[0] = ((0.99000001f * fRec0[1]) + (0.00999999978f * ((fSlow4 * (iSlow6 ? (iSlow11 ? fTemp6 : fTemp5) : (iSlow7 ? fTemp4 : (iSlow8 ? fRec3[0] : fTemp2)))) + (fSlow12 * (iSlow6 ? (iSlow11 ? fTemp2 : fTemp6) : (iSlow7 ? fTemp5 : (iSlow8 ? fTemp4 : fRec3[0])))))));
+			float fTemp7 = (fSlow1 * fRec0[0]);
+			float fTemp8 = float(input0[i]);
+			fVec1[(IOTA & 2047)] = fTemp8;
+			fRec4[0] = (fSlow13 + (0.999000013f * fRec4[1]));
+			fRec5[0] = (fSlow14 + (0.999000013f * fRec5[1]));
+			float fTemp9 = std::min<float>(1024.0f, (0.5f * (fRec4[0] * (((std::cos(fRec5[0]) * fTemp1) + (std::sin(fRec5[0]) * ftbl1vibeySIG1[iTemp0])) + 1.0f))));
 			float fTemp10 = (fTemp9 + -0.999994993f);
 			int iTemp11 = int(fTemp10);
 			float fTemp12 = std::floor(fTemp10);
 			float fTemp13 = (fTemp9 + (-1.0f - fTemp12));
 			float fTemp14 = (fTemp9 + (-2.0f - fTemp12));
 			float fTemp15 = (fTemp9 + (-3.0f - fTemp12));
-			output0[i] = FAUSTFLOAT((fSlow0 + ((fSlow1 + (fSlow2 * (fTemp0 + 1.0f))) * ((((fVec1[((IOTA - std::min<int>(1024, std::max<int>(0, iTemp11))) & 2047)] * (0.0f - fTemp13)) * (0.0f - (0.5f * fTemp14))) * (0.0f - (0.333333343f * fTemp15))) + ((fTemp9 - fTemp12) * ((((fVec1[((IOTA - std::min<int>(1024, std::max<int>(0, (iTemp11 + 1)))) & 2047)] * (0.0f - fTemp14)) * (0.0f - (0.5f * fTemp15))) + (0.5f * ((fTemp13 * fVec1[((IOTA - std::min<int>(1024, std::max<int>(0, (iTemp11 + 2)))) & 2047)]) * (0.0f - fTemp15)))) + (0.166666672f * ((fTemp13 * fTemp14) * fVec1[((IOTA - std::min<int>(1024, std::max<int>(0, (iTemp11 + 3)))) & 2047)]))))))));
-			fRec1[1] = fRec1[0];
-			IOTA = (IOTA + 1);
+			float fTemp16 = ((((fVec1[((IOTA - std::min<int>(1024, std::max<int>(0, iTemp11))) & 2047)] * (0.0f - fTemp13)) * (0.0f - (0.5f * fTemp14))) * (0.0f - (0.333333343f * fTemp15))) + ((fTemp9 - fTemp12) * ((((fVec1[((IOTA - std::min<int>(1024, std::max<int>(0, (iTemp11 + 1)))) & 2047)] * (0.0f - fTemp14)) * (0.0f - (0.5f * fTemp15))) + (0.5f * ((fTemp13 * fVec1[((IOTA - std::min<int>(1024, std::max<int>(0, (iTemp11 + 2)))) & 2047)]) * (0.0f - fTemp15)))) + (0.166666672f * ((fTemp13 * fTemp14) * fVec1[((IOTA - std::min<int>(1024, std::max<int>(0, (iTemp11 + 3)))) & 2047)])))));
+			output0[i] = FAUSTFLOAT(((fSlow0 + fTemp7) * fTemp16));
+			output1[i] = FAUSTFLOAT((fTemp16 * ((1.0f - fTemp7) - fSlow0)));
+			fVec0[1] = fVec0[0];
 			fRec2[1] = fRec2[0];
 			fRec3[1] = fRec3[0];
+			fRec0[1] = fRec0[0];
+			IOTA = (IOTA + 1);
+			fRec4[1] = fRec4[0];
+			fRec5[1] = fRec5[0];
 		}
 	}
 
