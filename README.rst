@@ -26,6 +26,7 @@ The Tremelo Shape (T SHAPE) control sets the following tremolo waveform for each
 1 -> 2: sine wave -> square wave
 2 -> 3: square wave with changing on/off ratio
 3 -> 4: saw (ascending) -> triangle -> saw (descending)
+4 -> 5: manual static value from 1 -> 0
 
 .. _Faust installation: https://faust.grame.fr/doc/manual/index.html#compiling-and-installing-the-faust-compiler
 .. _MOD Devices: https://www.moddevices.com/

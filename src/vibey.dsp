@@ -10,7 +10,7 @@ vib_dmax = 1024;
 
 freq = hslider("rate [log][name: Rate][tooltip: Frequency of tremolo and vibrato]", 4.0, 0.4, 10.0 ,0.01);
 trem_depth = hslider("trem_depth [name: Tremolo Depth][tooltip: Depth of the Tremolo]", 0.24, 0.0, 1.0 ,0.01);
-trem_shape = hslider("trem_shape [name: Tremolo Shape][tooltip: Wave shape of tremelo]", 0.0, 0.0, 3.99 ,0.01);
+trem_shape = hslider("trem_shape [name: Tremolo Shape][tooltip: Wave shape of tremelo]", 0.0, 0.0, 4.99 ,0.01);
 
 vib_depth = hslider("vib_depth [name:Vibrato Depth][tooltip: Amount of pitch bend of the vibrato]", 0.12, 0.0, 1.0 ,0.01);
 vib_offset = hslider("vib_offset [name:Vibrato Offset][tooltip: Phase offset of the vibrato vs the tremolo]", 0.0, 0.0, 1.0, 0.01);
@@ -36,7 +36,7 @@ trem_rand_sin = (trem_rand * trem_a_amp) + (trem_sin * trem_b_amp);
 trem_sin_square = (trem_sin * trem_a_amp) + (trem_impulse_to_mid * trem_b_amp) : si.smooth(0.99);
 trem_impulse = trem_impulse_to_mid : si.smooth(0.99);
 
-trem_blend = trem_rand_sin, trem_sin_square, trem_impulse, trem_tri: ba.selectn(4, trem_select);
+trem_blend = trem_rand_sin, trem_sin_square, trem_impulse, trem_tri, trem_a_amp : ba.selectn(5, trem_select);
 
 trem_min = ba.lin2LogGain(1 - trem_depth);
 trem_depthed = trem_blend * (1 - trem_min) + trem_min;

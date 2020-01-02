@@ -29,6 +29,7 @@ The Tremelo Shape (T SHAPE) control sets the following tremolo waveform for each
 1 -> 2: sine wave -> square wave
 2 -> 3: square wave with changing on/off ratio
 3 -> 4: saw (ascending) -> triangle -> saw (descending)
+4 -> 5: manual static value from 1 -> 0
 
 Values between the integers will blend the waveforms.
 """;
