@@ -8,13 +8,13 @@
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix units: <http://lv2plug.in/ns/extensions/units#> .
 <https://github.com/steveb/gula-plugins/vibey>
-       a lv2:Plugin ;
+       a lv2:Plugin , lv2:ModulatorPlugin ;
        doap:name "The Vibey" ;
        lv2:binary <vibey.so> ;
        lv2:optionalFeature epp:supportsStrictBounds ;
        lv2:optionalFeature lv2:hardRtCapable ;
        doap:maintainer [ foaf:name "Steve Baker" ] ;
-       doap:revision "1.0.0" ;
+       doap:revision "1.1.0" ;
        doap:license "GPLv3" ;
 rdfs:comment """
 A combination of vibrato and tremolo. The depth of
@@ -24,13 +24,11 @@ sawtooth, triangle and square waves. The output is stereo with the tremolo
 allocating between the left and right channels. The right channel can be
 ignored for a mono tremolo effect.
 
-The Tremelo Shape (T SHAPE) control sets the following shape for each value:
-0: Sine wave
-1: Saw wave (ascending)
-2: Triangle wave
-3: Saw wave (descending)
-4: Square wave
-5: Sine wave
+The Tremelo Shape (T SHAPE) control sets the following tremolo waveform for each value:
+0 -> 1: random -> sine wave
+1 -> 2: sine wave -> square wave
+2 -> 3: square wave with changing on/off ratio
+3 -> 4: saw (ascending) -> triangle -> saw (descending)
 
 Values between the integers will blend the waveforms.
 """;

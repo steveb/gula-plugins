@@ -21,5 +21,11 @@ sawtooth, triangle and square waves. The output is stereo with the tremolo
 allocating between the left and right channels. The right channel can be
 ignored for a mono tremolo effect.
 
+The Tremelo Shape (T SHAPE) control sets the following tremolo waveform for each value:
+0 -> 1: random -> sine wave
+1 -> 2: sine wave -> square wave
+2 -> 3: square wave with changing on/off ratio
+3 -> 4: saw (ascending) -> triangle -> saw (descending)
+
 .. _Faust installation: https://faust.grame.fr/doc/manual/index.html#compiling-and-installing-the-faust-compiler
 .. _MOD Devices: https://www.moddevices.com/
