@@ -1,0 +1,42 @@
+
+ba = library("basics.lib");
+ma = library("maths.lib");
+si = library("signals.lib");
+no = library("noises.lib");
+os = library("oscillators.lib");
+de = library("delays.lib");
+
+gula_lf_osc(freq, depth, shape) = blend * (1 - depth_min) + depth_min
+with {
+    select = shape : int;
+    b_amp = shape - floor(shape);
+    a_amp = 1.0 - b_amp;
+
+    sin_osc = (os.oscsin(freq) + 1.0) / 2.0;
+    period = ma.SR / freq : int;
+    half_period = period / 2;
+    mid_period = ba.if(select == 1, period / 2, period * a_amp : int);
+    after_mid_period = period - mid_period;
+    impulse_to_mid = ba.pulsen(mid_period, period);
+    impulse_after_mid = (impulse * -1) + 1;
+    sweep_up = (ba.sweep(mid_period, impulse_to_mid) : float) / mid_period;
+    sweep_down = 1.0 - (ba.sweep(after_mid_period, impulse_after_mid) : float) / after_mid_period;
+    tri = ba.if(impulse_to_mid, sweep_up, sweep_down) : si.smooth(0.99);
+    rand = (no.lfnoise0(freq) + 1.0) / 2.0 : si.smooth(0.9995);
+
+    rand_sin = (rand * a_amp) + (sin_osc * b_amp);
+    sin_square = (sin_osc * a_amp) + (impulse_to_mid * b_amp) : si.smooth(0.99);
+    impulse = impulse_to_mid : si.smooth(0.99);
+
+    blend = rand_sin, sin_square, impulse, tri, a_amp : ba.selectn(5, select);
+
+    depth_min = ba.lin2LogGain(1 - depth);
+    depthed = blend * (1 - depth_min) + depth_min;
+};
+
+gula_vibrato(freq, depth, offset) = de.fdelayltv(3, dmax, min(dmax, osc))
+with {
+    dmax = 1024;
+    amp = ba.lin2LogGain(depth) * dmax : si.smooth(0.999);
+    osc = (os.oscp(freq, 6.28318 * offset : si.smooth(0.999)) + 1.0) * amp / 2.0;
+};
