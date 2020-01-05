@@ -14,6 +14,7 @@ trem_shape = hslider("trem_shape [name: Tremolo Shape][tooltip: Wave shape of tr
 vib_depth = hslider("vib_depth [name:Vibrato Depth][tooltip: Amount of pitch bend of the vibrato]", 0.12, 0.0, 1.0 ,0.01);
 vib_offset = hslider("vib_offset [name:Vibrato Offset][tooltip: Phase offset of the vibrato vs the tremolo]", 0.0, 0.0, 1.0, 0.01);
 
+// trem = gula_lf_osc(freq, trem_depth, trem_shape) : hbargraph("trem level", 0.0, 1.0);
 trem = gula_lf_osc(freq, trem_depth, trem_shape);
 vibrato = gula_vibrato(freq, vib_depth, vib_offset);
 

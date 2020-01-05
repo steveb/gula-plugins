@@ -6,27 +6,51 @@ no = library("noises.lib");
 os = library("oscillators.lib");
 de = library("delays.lib");
 
+clamp(low, high, n) = min(max(n, low), high);
+
+clamp_control(n) = clamp(0.0, 1.0, n);
+
+scale(offset, mult, n) = (n + offset) * mult;
+
+// scale from -1..1 to 0..1
+scale_osc_control(n) = scale(1.0, 0.5, n);
+
+gula_lf_tri(freq, shape) = ba.if(impulse_to_mid, sweep_up, sweep_down)
+with {
+    period = ma.SR / freq : int;
+
+    mid_period = period * shape : int;
+    after_mid_period = period - mid_period;
+
+    impulse_to_mid = ba.pulsen(mid_period, period);
+    impulse_after_mid = scale(-1.0, -1.0, impulse_to_mid);
+
+    sweep_up = (ba.sweep(mid_period, impulse_to_mid) : float) / mid_period;
+    sweep_down = 1.0 - (ba.sweep(after_mid_period, impulse_after_mid) : float) / after_mid_period;
+};
+
+gula_lf_impulse(freq, shape) = impulse_to_mid
+with {
+    period = ma.SR / freq : int;
+    mid_period = period * shape : int;
+    impulse_to_mid = ba.pulsen(mid_period, period);
+};
+
 gula_lf_osc(freq, depth, shape) = blend * (1 - depth_min) + depth_min
 with {
     select = shape : int;
     b_amp = shape - floor(shape);
     a_amp = 1.0 - b_amp;
 
-    sin_osc = (os.oscsin(freq) + 1.0) / 2.0;
-    period = ma.SR / freq : int;
-    half_period = period / 2;
-    mid_period = ba.if(select == 1, period / 2, period * a_amp : int);
-    after_mid_period = period - mid_period;
-    impulse_to_mid = ba.pulsen(mid_period, period);
-    impulse_after_mid = (impulse * -1) + 1;
-    sweep_up = (ba.sweep(mid_period, impulse_to_mid) : float) / mid_period;
-    sweep_down = 1.0 - (ba.sweep(after_mid_period, impulse_after_mid) : float) / after_mid_period;
-    tri = ba.if(impulse_to_mid, sweep_up, sweep_down) : si.smooth(0.99);
-    rand = (no.lfnoise0(freq) + 1.0) / 2.0 : si.smooth(0.9995);
-
+    sin_osc = os.oscsin(freq) : scale_osc_control;
+    rand = no.lfnoiseN(1, freq) : scale_osc_control : clamp_control;
     rand_sin = (rand * a_amp) + (sin_osc * b_amp);
-    sin_square = (sin_osc * a_amp) + (impulse_to_mid * b_amp) : si.smooth(0.99);
-    impulse = impulse_to_mid : si.smooth(0.99);
+
+    impulse_shape = ba.if(select == 1, 0.5, a_amp);
+    impulse = gula_lf_impulse(freq, impulse_shape) : si.smooth(0.99);
+    sin_square = (sin_osc * a_amp) + (impulse * b_amp) : si.smooth(0.99);
+
+    tri = gula_lf_tri(freq, a_amp) : si.smooth(0.99);
 
     blend = rand_sin, sin_square, impulse, tri, a_amp : ba.selectn(5, select);
 

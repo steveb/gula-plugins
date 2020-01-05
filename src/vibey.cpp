@@ -748,16 +748,17 @@ class vibey : public dsp {
 	float fConst0;
 	float fConst1;
 	FAUSTFLOAT fHslider2;
+	float fConst2;
 	float fRec2[2];
 	float fRec3[2];
 	int iRec4[2];
 	float fRec1[2];
 	float fRec0[2];
-	float fConst2;
+	float fConst3;
 	float fRec6[2];
-	int iRec8[2];
+	int iRec9[2];
+	float fRec8[2];
 	float fRec7[2];
-	float fRec9[2];
 	int iRec11[2];
 	int iRec12[2];
 	float fRec10[2];
@@ -780,10 +781,20 @@ class vibey : public dsp {
 		m->declare("description", "An LV2 plugin which is a combination of vibrato and tremolo");
 		m->declare("filename", "vibey.dsp");
 		m->declare("filters.lib/lowpass0_highpass1", "Copyright (C) 2003-2019 by Julius O. Smith III <jos@ccrma.stanford.edu>");
+		m->declare("filters.lib/lowpass0_highpass1:author", "Julius O. Smith III");
+		m->declare("filters.lib/lowpass:author", "Julius O. Smith III");
+		m->declare("filters.lib/lowpass:copyright", "Copyright (C) 2003-2019 by Julius O. Smith III <jos@ccrma.stanford.edu>");
+		m->declare("filters.lib/lowpass:license", "MIT-style STK-4.3 license");
 		m->declare("filters.lib/name", "Faust Filters Library");
 		m->declare("filters.lib/nlf2:author", "Julius O. Smith III");
 		m->declare("filters.lib/nlf2:copyright", "Copyright (C) 2003-2019 by Julius O. Smith III <jos@ccrma.stanford.edu>");
 		m->declare("filters.lib/nlf2:license", "MIT-style STK-4.3 license");
+		m->declare("filters.lib/tf1:author", "Julius O. Smith III");
+		m->declare("filters.lib/tf1:copyright", "Copyright (C) 2003-2019 by Julius O. Smith III <jos@ccrma.stanford.edu>");
+		m->declare("filters.lib/tf1:license", "MIT-style STK-4.3 license");
+		m->declare("filters.lib/tf1s:author", "Julius O. Smith III");
+		m->declare("filters.lib/tf1s:copyright", "Copyright (C) 2003-2019 by Julius O. Smith III <jos@ccrma.stanford.edu>");
+		m->declare("filters.lib/tf1s:license", "MIT-style STK-4.3 license");
 		m->declare("license", "GPLv3");
 		m->declare("maths.lib/author", "GRAME");
 		m->declare("maths.lib/copyright", "GRAME");
@@ -853,8 +864,9 @@ class vibey : public dsp {
 	virtual void instanceConstants(int sample_rate) {
 		fSampleRate = sample_rate;
 		fConst0 = std::min<float>(192000.0f, std::max<float>(1.0f, float(fSampleRate)));
-		fConst1 = (6.28318548f / fConst0);
-		fConst2 = (1.0f / fConst0);
+		fConst1 = (3.14159274f / fConst0);
+		fConst2 = (6.28318548f / fConst0);
+		fConst3 = (1.0f / fConst0);
 	}
 	
 	virtual void instanceResetUserInterface() {
@@ -888,13 +900,13 @@ class vibey : public dsp {
 			fRec6[l7] = 0.0f;
 		}
 		for (int l8 = 0; (l8 < 2); l8 = (l8 + 1)) {
-			iRec8[l8] = 0;
+			iRec9[l8] = 0;
 		}
 		for (int l9 = 0; (l9 < 2); l9 = (l9 + 1)) {
-			fRec7[l9] = 0.0f;
+			fRec8[l9] = 0.0f;
 		}
 		for (int l10 = 0; (l10 < 2); l10 = (l10 + 1)) {
-			fRec9[l10] = 0.0f;
+			fRec7[l10] = 0.0f;
 		}
 		for (int l11 = 0; (l11 < 2); l11 = (l11 + 1)) {
 			iRec11[l11] = 0;
@@ -970,55 +982,60 @@ class vibey : public dsp {
 		float fSlow7 = std::floor(fSlow2);
 		float fSlow8 = (fSlow7 + (1.0f - fSlow2));
 		float fSlow9 = float(fHslider2);
-		float fSlow10 = (fConst1 * fSlow9);
-		float fSlow11 = std::sin(fSlow10);
-		float fSlow12 = std::cos(fSlow10);
-		float fSlow13 = (fSlow2 - fSlow7);
-		float fSlow14 = (0.5f * fSlow13);
-		float fSlow15 = (fConst2 * fSlow9);
-		float fSlow16 = (0.5f * fSlow8);
-		int iSlow17 = int((fConst0 / fSlow9));
-		float fSlow18 = float(iSlow17);
-		float fSlow19 = ((iSlow3 == 1) ? (0.5f * fSlow18) : float(int((fSlow8 * fSlow18))));
-		int iSlow20 = (iSlow3 >= 4);
-		float fSlow21 = (fSlow18 - fSlow19);
-		float fSlow22 = (1.02400005f * vibey_faustpower2_f(float(fHslider3)));
-		float fSlow23 = (0.00628317986f * float(fHslider4));
+		float fSlow10 = (1.0f / std::tan((fConst1 * fSlow9)));
+		float fSlow11 = (1.0f / (fSlow10 + 1.0f));
+		float fSlow12 = (1.0f - fSlow10);
+		float fSlow13 = (fConst2 * fSlow9);
+		float fSlow14 = std::sin(fSlow13);
+		float fSlow15 = std::cos(fSlow13);
+		float fSlow16 = (fSlow2 - fSlow7);
+		float fSlow17 = (0.5f * fSlow16);
+		float fSlow18 = (fConst3 * fSlow9);
+		float fSlow19 = (0.5f * fSlow8);
+		int iSlow20 = int((fConst0 / fSlow9));
+		float fSlow21 = float(iSlow20);
+		int iSlow22 = int((fSlow21 * ((iSlow3 == 1) ? 0.5f : fSlow8)));
+		int iSlow23 = (iSlow3 >= 4);
+		int iSlow24 = int((fSlow8 * fSlow21));
+		float fSlow25 = float((iSlow20 - iSlow24));
+		float fSlow26 = (1.0f / fSlow25);
+		float fSlow27 = (1.0f / float(iSlow24));
+		float fSlow28 = (1.02400005f * vibey_faustpower2_f(float(fHslider3)));
+		float fSlow29 = (0.00628317986f * float(fHslider4));
 		for (int i = 0; (i < count); i = (i + 1)) {
 			iVec0[0] = 1;
-			fRec2[0] = ((fSlow11 * fRec3[1]) + (fSlow12 * fRec2[1]));
-			fRec3[0] = ((float((1 - iVec0[1])) + (fSlow12 * fRec3[1])) - (fSlow11 * fRec2[1]));
+			fRec2[0] = ((fSlow14 * fRec3[1]) + (fSlow15 * fRec2[1]));
+			fRec3[0] = ((float((1 - iVec0[1])) + (fSlow15 * fRec3[1])) - (fSlow14 * fRec2[1]));
 			int iTemp0 = ((fRec2[1] <= 0.0f) & (fRec2[0] > 0.0f));
 			iRec4[0] = ((1103515245 * iRec4[1]) + 12345);
 			fRec1[0] = ((fRec1[1] * float((1 - iTemp0))) + (4.65661287e-10f * (float(iRec4[0]) * float(iTemp0))));
-			fRec0[0] = ((0.999499977f * fRec0[1]) + (0.000250000012f * (fRec1[0] + 1.0f)));
-			fRec6[0] = (fSlow15 + (fRec6[1] - std::floor((fSlow15 + fRec6[1]))));
+			fRec0[0] = (0.0f - (fSlow11 * ((fSlow12 * fRec0[1]) - (fRec1[0] + fRec1[1]))));
+			fRec6[0] = (fSlow18 + (fRec6[1] - std::floor((fSlow18 + fRec6[1]))));
 			int iTemp1 = int((65536.0f * fRec6[0]));
 			float fTemp2 = ftbl0vibeySIG0[iTemp1];
 			float fTemp3 = (fTemp2 + 1.0f);
-			iRec8[0] = ((iVec0[1] + iRec8[1]) % iSlow17);
-			int iTemp4 = (float(iRec8[0]) < fSlow19);
-			float fTemp5 = float(iTemp4);
-			fRec7[0] = ((0.99000001f * fRec7[1]) + (0.00999999978f * ((fSlow16 * fTemp3) + (fSlow13 * fTemp5))));
-			fRec9[0] = ((0.99000001f * fRec9[1]) + (0.00999999978f * fTemp5));
-			iRec11[0] = ((iRec11[1] + 1) % int(std::max<float>(1.0f, (fSlow21 * (1.0f - fRec9[0])))));
-			iRec12[0] = ((iRec12[1] + 1) % int(std::max<float>(1.0f, (fSlow19 * fTemp5))));
-			fRec10[0] = ((0.99000001f * fRec10[1]) + (0.00999999978f * (iTemp4 ? (float(iRec12[0]) / fSlow19) : (1.0f - (float(iRec11[0]) / fSlow21)))));
-			float fTemp6 = (fSlow1 * (iSlow4 ? (iSlow20 ? fSlow8 : fRec10[0]) : (iSlow5 ? fRec9[0] : (iSlow6 ? fRec7[0] : ((fSlow8 * fRec0[0]) + (fSlow14 * fTemp3))))));
-			float fTemp7 = float(input0[i]);
-			fVec1[(IOTA & 2047)] = fTemp7;
-			fRec13[0] = (fSlow22 + (0.999000013f * fRec13[1]));
-			fRec14[0] = (fSlow23 + (0.999000013f * fRec14[1]));
-			float fTemp8 = std::min<float>(1024.0f, (0.5f * (fRec13[0] * (((std::cos(fRec14[0]) * fTemp2) + (std::sin(fRec14[0]) * ftbl1vibeySIG1[iTemp1])) + 1.0f))));
-			float fTemp9 = (fTemp8 + -0.999994993f);
-			int iTemp10 = int(fTemp9);
-			float fTemp11 = std::floor(fTemp9);
-			float fTemp12 = (fTemp8 + (-1.0f - fTemp11));
-			float fTemp13 = (fTemp8 + (-2.0f - fTemp11));
-			float fTemp14 = (fTemp8 + (-3.0f - fTemp11));
-			float fTemp15 = ((((fVec1[((IOTA - std::min<int>(1024, std::max<int>(0, iTemp10))) & 2047)] * (0.0f - fTemp12)) * (0.0f - (0.5f * fTemp13))) * (0.0f - (0.333333343f * fTemp14))) + ((fTemp8 - fTemp11) * ((((fVec1[((IOTA - std::min<int>(1024, std::max<int>(0, (iTemp10 + 1)))) & 2047)] * (0.0f - fTemp13)) * (0.0f - (0.5f * fTemp14))) + (0.5f * ((fTemp12 * fVec1[((IOTA - std::min<int>(1024, std::max<int>(0, (iTemp10 + 2)))) & 2047)]) * (0.0f - fTemp14)))) + (0.166666672f * ((fTemp12 * fTemp13) * fVec1[((IOTA - std::min<int>(1024, std::max<int>(0, (iTemp10 + 3)))) & 2047)])))));
-			output0[i] = FAUSTFLOAT(((fSlow0 + fTemp6) * fTemp15));
-			output1[i] = FAUSTFLOAT((fTemp15 * ((1.0f - fTemp6) - fSlow0)));
+			iRec9[0] = ((iVec0[1] + iRec9[1]) % iSlow20);
+			fRec8[0] = ((0.99000001f * fRec8[1]) + (0.00999999978f * float((iRec9[0] < iSlow22))));
+			fRec7[0] = ((0.99000001f * fRec7[1]) + (0.00999999978f * ((fSlow19 * fTemp3) + (fSlow16 * fRec8[0]))));
+			int iTemp4 = (iRec9[0] < iSlow24);
+			iRec11[0] = ((iRec11[1] + 1) % int(std::max<float>(1.0f, (fSlow25 * (0.0f - (float(iTemp4) + -1.0f))))));
+			iRec12[0] = ((iRec12[1] + 1) % std::max<int>(1, int((iSlow24 * iTemp4))));
+			fRec10[0] = ((0.99000001f * fRec10[1]) + (0.00999999978f * (iTemp4 ? (fSlow27 * float(iRec12[0])) : (1.0f - (fSlow26 * float(iRec11[0]))))));
+			float fTemp5 = (fSlow1 * (iSlow4 ? (iSlow23 ? fSlow8 : fRec10[0]) : (iSlow5 ? fRec8[0] : (iSlow6 ? fRec7[0] : ((fSlow8 * std::min<float>(std::max<float>((0.5f * (fRec0[0] + 1.0f)), 0.0f), 1.0f)) + (fSlow17 * fTemp3))))));
+			float fTemp6 = float(input0[i]);
+			fVec1[(IOTA & 2047)] = fTemp6;
+			fRec13[0] = (fSlow28 + (0.999000013f * fRec13[1]));
+			fRec14[0] = (fSlow29 + (0.999000013f * fRec14[1]));
+			float fTemp7 = std::min<float>(1024.0f, (0.5f * (fRec13[0] * (((std::cos(fRec14[0]) * fTemp2) + (std::sin(fRec14[0]) * ftbl1vibeySIG1[iTemp1])) + 1.0f))));
+			float fTemp8 = (fTemp7 + -0.999994993f);
+			int iTemp9 = int(fTemp8);
+			float fTemp10 = std::floor(fTemp8);
+			float fTemp11 = (fTemp7 + (-1.0f - fTemp10));
+			float fTemp12 = (fTemp7 + (-2.0f - fTemp10));
+			float fTemp13 = (fTemp7 + (-3.0f - fTemp10));
+			float fTemp14 = ((((fVec1[((IOTA - std::min<int>(1024, std::max<int>(0, iTemp9))) & 2047)] * (0.0f - fTemp11)) * (0.0f - (0.5f * fTemp12))) * (0.0f - (0.333333343f * fTemp13))) + ((fTemp7 - fTemp10) * ((((fVec1[((IOTA - std::min<int>(1024, std::max<int>(0, (iTemp9 + 1)))) & 2047)] * (0.0f - fTemp12)) * (0.0f - (0.5f * fTemp13))) + (0.5f * ((fTemp11 * fVec1[((IOTA - std::min<int>(1024, std::max<int>(0, (iTemp9 + 2)))) & 2047)]) * (0.0f - fTemp13)))) + (0.166666672f * ((fTemp11 * fTemp12) * fVec1[((IOTA - std::min<int>(1024, std::max<int>(0, (iTemp9 + 3)))) & 2047)])))));
+			output0[i] = FAUSTFLOAT(((fSlow0 + fTemp5) * fTemp14));
+			output1[i] = FAUSTFLOAT((fTemp14 * ((1.0f - fTemp5) - fSlow0)));
 			iVec0[1] = iVec0[0];
 			fRec2[1] = fRec2[0];
 			fRec3[1] = fRec3[0];
@@ -1026,9 +1043,9 @@ class vibey : public dsp {
 			fRec1[1] = fRec1[0];
 			fRec0[1] = fRec0[0];
 			fRec6[1] = fRec6[0];
-			iRec8[1] = iRec8[0];
+			iRec9[1] = iRec9[0];
+			fRec8[1] = fRec8[0];
 			fRec7[1] = fRec7[0];
-			fRec9[1] = fRec9[0];
 			iRec11[1] = iRec11[0];
 			iRec12[1] = iRec12[0];
 			fRec10[1] = fRec10[0];
