@@ -2,7 +2,7 @@
 @prefix modgui: <http://moddevices.com/ns/modgui#> .
 @prefix lv2:    <http://lv2plug.in/ns/lv2core#> .
 
-<https://github.com/steveb/firce/vintage_mics>
+<https://github.com/steveb/gula-plugins/vintage_mics>
     modgui:gui [
         modgui:resourcesDirectory <modgui> ;
         modgui:iconTemplate <modgui/icon-vintage-mics.html> ;
