@@ -11,7 +11,7 @@ CXXFLAGS = -O3 -std=c++11 -ffast-math -ftree-vectorize
 CXX = g++
 CPPFLAGS = -DURI_PREFIX=\"$(URI_PREFIX)\" -DFAUST_META=1 -DFAUST_MIDICC=0 -DFAUST_MTS=0
 
-plugins := vibey.lv2
+plugins := vibey.lv2 vintage_mics.lv2
 cppsrc := $(plugins:.lv2=.cpp)
 buildlibs := $(plugins:.lv2=.so)
 
@@ -24,7 +24,7 @@ all: $(buildlibs)
 	cp $@ ../lv2/$*.lv2/
 
 %.cpp: %.dsp
-	faust -i -a "$(FAUSTLIB)/$(FAUSTARCH)" -cn $* $< -o $@
+	faust -i --timeout 3600 -a "$(FAUSTLIB)/$(FAUSTARCH)" -cn $* $< -o $@
 
 clean:
 	rm -f $(cppsrc) $(buildlibs)

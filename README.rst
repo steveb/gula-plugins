@@ -30,5 +30,14 @@ for each value:
 * 3 -> 4: saw (ascending) -> triangle -> saw (descending)
 * 4 -> 5: manual static value from 1 -> 0
 
+Vintage Mics
+============
+
+An LV2 plugin which processes the signal with impulse responses from vintage microphones.
+The plugin packages impulse responses from the
+`Microphone Impulse Response Project`_ and these impulses are licensed as `CC BY-SA 4.0`_.
+
 .. _Faust installation: https://faust.grame.fr/doc/manual/index.html#compiling-and-installing-the-faust-compiler
 .. _MOD Devices: https://www.moddevices.com/
+.. _Microphone Impulse Response Project: http://micirp.blogspot.com/
+.. _CC BY-SA 4.0: https://creativecommons.org/licenses/by-sa/4.0/
