@@ -8,7 +8,7 @@ FAUSTTOOLSFLAGS =
 
 PROCARCH = -fPIC
 CXXFLAGS = -O3 -std=c++11 -ffast-math -ftree-vectorize
-CXX = g++
+CXX = clang++
 CPPFLAGS = -DURI_PREFIX=\"$(URI_PREFIX)\" -DFAUST_META=1 -DFAUST_MIDICC=0 -DFAUST_MTS=0
 
 plugins := vibey.lv2 vintage_mics.lv2
