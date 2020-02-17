@@ -14,11 +14,75 @@
        lv2:binary <vintage_mics.so> ;
        lv2:optionalFeature epp:supportsStrictBounds ;
        lv2:optionalFeature lv2:hardRtCapable ;
-       doap:revision "0.2.0" ;
+       doap:revision "1.0.0" ;
        doap:license "GPLv3" ;
 rdfs:comment """
 An Impulse Response plugin with the following impulses:
 AKGD12
+AKG FaultyD12
+Altec 639
+Altec 670A
+Altec 670B
+American R331
+Amperite RA
+Astatic77
+BBCmarconi B
+BeO BM2
+BeO BM6
+Beomic 1000
+Beyer M260
+Beyer M360
+BeyerM500Stock
+Coles 4038
+Doremi 351
+EMI ribbon
+EV RE20 Flat
+EV RE20 HPF
+FilmIndustries M8
+FosterDynamicDF1
+Framez
+GaumontKalee
+GEC 2373 Ribbon
+GEC bigdynamic
+Grampian GR2
+Lomo52A5M
+Meazzi
+Melodium 42B 1
+Melodium Model12
+MelodiumRM6
+OktavaMK18 Overload
+OktavaMK18Silver
+OktavaML16
+Oktava ML19
+RCA 44BX 1
+RCA 44BX 2
+RCA 74B
+RCA 77DX 1
+RCA 77DX 2
+RCA KU3a 1
+RCAKU3a
+RCA PB90
+RCA varacoustic fig8
+ResloCR600
+ResloDynamic
+Reslo RB250
+Reslo RB RedLabel
+Reslo RV
+Reslo SR1
+ResloURA
+Reslo VMC2
+Shure315 flat
+Shure315 HPF
+Shure510C
+Sony C37Fet
+STC4033 Cardioid
+STC4033 Pressure
+STC4033 Ribbon
+Telefunken M201
+Toshiba TypeG
+Toshiba TypeH BK5
+Toshiba TypeK flat
+Toshiba TypeK HPF
 """;
     lv2:port [
 	a lv2:InputPort ;
@@ -39,14 +103,77 @@ AKGD12
 	lv2:symbol "ir_1" ;
 	lv2:name "Impulse Response" ;
         lv2:portProperty epp:hasStrictBounds ;
-        epp:rangeSteps 7 ;
+        epp:rangeSteps 64 ;
 	lv2:default 0 ;
 	lv2:minimum 0 ;
-	lv2:maximum 7 ;
+	lv2:maximum 64 ;
     lv2:portProperty lv2:integer;
     lv2:portProperty lv2:enumeration ;
     lv2:scalePoint [rdfs:label "AKGD12"; rdf:value 0];
     lv2:scalePoint [rdfs:label "AKG FaultyD12"; rdf:value 1];
+    lv2:scalePoint [rdfs:label "Altec 639"; rdf:value 2];
+    lv2:scalePoint [rdfs:label "Altec 670A"; rdf:value 3];
+    lv2:scalePoint [rdfs:label "Altec 670B"; rdf:value 4];
+    lv2:scalePoint [rdfs:label "American R331"; rdf:value 5];
+    lv2:scalePoint [rdfs:label "Amperite RA"; rdf:value 6];
+    lv2:scalePoint [rdfs:label "Astatic77"; rdf:value 7];
+    lv2:scalePoint [rdfs:label "BBCmarconi B"; rdf:value 8];
+    lv2:scalePoint [rdfs:label "BeO BM2"; rdf:value 9];
+    lv2:scalePoint [rdfs:label "BeO BM6"; rdf:value 10];
+    lv2:scalePoint [rdfs:label "Beomic 1000"; rdf:value 11];
+    lv2:scalePoint [rdfs:label "Beyer M260"; rdf:value 12];
+    lv2:scalePoint [rdfs:label "Beyer M360"; rdf:value 13];
+    lv2:scalePoint [rdfs:label "BeyerM500Stock"; rdf:value 14];
+    lv2:scalePoint [rdfs:label "Coles 4038"; rdf:value 15];
+    lv2:scalePoint [rdfs:label "Doremi 351"; rdf:value 16];
+    lv2:scalePoint [rdfs:label "EMI ribbon"; rdf:value 17];
+    lv2:scalePoint [rdfs:label "EV RE20 Flat"; rdf:value 18];
+    lv2:scalePoint [rdfs:label "EV RE20 HPF"; rdf:value 19];
+    lv2:scalePoint [rdfs:label "FilmIndustries M8"; rdf:value 20];
+    lv2:scalePoint [rdfs:label "FosterDynamicDF1"; rdf:value 21];
+    lv2:scalePoint [rdfs:label "Framez"; rdf:value 22];
+    lv2:scalePoint [rdfs:label "GaumontKalee"; rdf:value 23];
+    lv2:scalePoint [rdfs:label "GEC 2373 Ribbon"; rdf:value 24];
+    lv2:scalePoint [rdfs:label "GEC bigdynamic"; rdf:value 25];
+    lv2:scalePoint [rdfs:label "Grampian GR2"; rdf:value 26];
+    lv2:scalePoint [rdfs:label "Lomo52A5M"; rdf:value 27];
+    lv2:scalePoint [rdfs:label "Meazzi"; rdf:value 28];
+    lv2:scalePoint [rdfs:label "Melodium 42B 1"; rdf:value 29];
+    lv2:scalePoint [rdfs:label "Melodium Model12"; rdf:value 30];
+    lv2:scalePoint [rdfs:label "MelodiumRM6"; rdf:value 31];
+    lv2:scalePoint [rdfs:label "OktavaMK18 Overload"; rdf:value 32];
+    lv2:scalePoint [rdfs:label "OktavaMK18Silver"; rdf:value 33];
+    lv2:scalePoint [rdfs:label "OktavaML16"; rdf:value 34];
+    lv2:scalePoint [rdfs:label "Oktava ML19"; rdf:value 35];
+    lv2:scalePoint [rdfs:label "RCA 44BX 1"; rdf:value 36];
+    lv2:scalePoint [rdfs:label "RCA 44BX 2"; rdf:value 37];
+    lv2:scalePoint [rdfs:label "RCA 74B"; rdf:value 38];
+    lv2:scalePoint [rdfs:label "RCA 77DX 1"; rdf:value 39];
+    lv2:scalePoint [rdfs:label "RCA 77DX 2"; rdf:value 40];
+    lv2:scalePoint [rdfs:label "RCA KU3a 1"; rdf:value 41];
+    lv2:scalePoint [rdfs:label "RCAKU3a"; rdf:value 42];
+    lv2:scalePoint [rdfs:label "RCA PB90"; rdf:value 43];
+    lv2:scalePoint [rdfs:label "RCA varacoustic fig8"; rdf:value 44];
+    lv2:scalePoint [rdfs:label "ResloCR600"; rdf:value 45];
+    lv2:scalePoint [rdfs:label "ResloDynamic"; rdf:value 46];
+    lv2:scalePoint [rdfs:label "Reslo RB250"; rdf:value 47];
+    lv2:scalePoint [rdfs:label "Reslo RB RedLabel"; rdf:value 48];
+    lv2:scalePoint [rdfs:label "Reslo RV"; rdf:value 49];
+    lv2:scalePoint [rdfs:label "Reslo SR1"; rdf:value 50];
+    lv2:scalePoint [rdfs:label "ResloURA"; rdf:value 51];
+    lv2:scalePoint [rdfs:label "Reslo VMC2"; rdf:value 52];
+    lv2:scalePoint [rdfs:label "Shure315 flat"; rdf:value 53];
+    lv2:scalePoint [rdfs:label "Shure315 HPF"; rdf:value 54];
+    lv2:scalePoint [rdfs:label "Shure510C"; rdf:value 55];
+    lv2:scalePoint [rdfs:label "Sony C37Fet"; rdf:value 56];
+    lv2:scalePoint [rdfs:label "STC4033 Cardioid"; rdf:value 57];
+    lv2:scalePoint [rdfs:label "STC4033 Pressure"; rdf:value 58];
+    lv2:scalePoint [rdfs:label "STC4033 Ribbon"; rdf:value 59];
+    lv2:scalePoint [rdfs:label "Telefunken M201"; rdf:value 60];
+    lv2:scalePoint [rdfs:label "Toshiba TypeG"; rdf:value 61];
+    lv2:scalePoint [rdfs:label "Toshiba TypeH BK5"; rdf:value 62];
+    lv2:scalePoint [rdfs:label "Toshiba TypeK flat"; rdf:value 63];
+    lv2:scalePoint [rdfs:label "Toshiba TypeK HPF"; rdf:value 64];
     ] , [
 	a lv2:InputPort ;
 	a lv2:AudioPort ;
