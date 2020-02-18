@@ -14,7 +14,7 @@
        lv2:binary <vintage_mics.so> ;
        lv2:optionalFeature epp:supportsStrictBounds ;
        lv2:optionalFeature lv2:hardRtCapable ;
-       doap:maintainer [ foaf:name "Steve Baker" ] ;
+       doap:maintainer [ foaf:name "GULA" ] ;
        doap:revision "1.0.0" ;
        doap:license "GPLv3" ;
 rdfs:comment """
