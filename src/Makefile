@@ -1,3 +1,5 @@
+plugins := vibey.lv2 vintage_mics.lv2 gods_cab.lv2
+
 URI_PREFIX = https://github.com/steveb/gula-plugins
 
 FAUSTARCH = lv2.cpp
@@ -11,7 +13,6 @@ CXXFLAGS = -std=c++11 -ffast-math -ftree-vectorize
 CXX = g++
 CPPFLAGS = -DURI_PREFIX=\"$(URI_PREFIX)\" -DFAUST_META=1 -DFAUST_MIDICC=0 -DFAUST_MTS=0
 
-plugins := vibey.lv2 vintage_mics.lv2
 cppsrc := $(plugins:.lv2=.cpp)
 buildlibs := $(plugins:.lv2=.so)
 

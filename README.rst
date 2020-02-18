@@ -37,7 +37,16 @@ An LV2 plugin which processes the signal with impulse responses from vintage mic
 The plugin packages impulse responses from the
 `Microphone Impulse Response Project`_ and these impulses are licensed as `CC BY-SA 4.0`_.
 
+God's Cab
+=========
+
+An LV2 plugin which processes the signal with impulse responses from the
+God's Cab collection created by `Wilkinson Audio`_. Only a subset of the
+collection is included (room and TS impulses are removed,
+only presence=5 impulses are included).
+
 .. _Faust installation: https://faust.grame.fr/doc/manual/index.html#compiling-and-installing-the-faust-compiler
 .. _MOD Devices: https://www.moddevices.com/
 .. _Microphone Impulse Response Project: http://micirp.blogspot.com/
 .. _CC BY-SA 4.0: https://creativecommons.org/licenses/by-sa/4.0/
+.. _Wilkinson Audio: https://wilkinsonaudio.com/
