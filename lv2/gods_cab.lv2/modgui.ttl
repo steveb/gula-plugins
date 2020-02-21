@@ -9,10 +9,11 @@
         modgui:screenshot <modgui/screenshot-gods-cab.png> ;
         modgui:thumbnail <modgui/thumbnail-gods-cab.png> ;
         modgui:brand "Gula" ;
-        modgui:label "Gods Cab" ;
-        modgui:model "boxy-small" ;
-        modgui:panel "1-footswitch-presets" ;
+        modgui:label "God's Cab" ;
+        modgui:model "boxy" ;
+        modgui:panel "1-select-1-knob" ;
         modgui:color "zinc" ;
+        modgui:knob "aluminium" ;
         modgui:port [
             lv2:index 0 ;
             lv2:symbol "ir_1" ;
