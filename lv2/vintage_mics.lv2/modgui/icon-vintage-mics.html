@@ -5,12 +5,16 @@
     <div class="mod-light on" mod-role="bypass-light"></div>
     <div class="mod-footswitch" mod-role="bypass"></div>
     <div class="mod-control-group mod-presets clearfix">
-        <select mod-role="presets">
-            <option value="">---</option>
-            {{#effect.presets}}
-            <option mod-role="preset-label" value="{{uri}}">{{label}}</option>
-            {{/effect.presets}}
-        </select>
+        {{#controls.0}}
+        <div class="mod-enumerated" mod-role="input-control-port" mod-port-symbol="{{symbol}}" mod-widget="custom-select">
+          <div mod-role="input-control-value" mod-port-symbol="{{symbol}}" class="mod-enumerated-selected"></div>
+          <div class="mod-enumerated-list">
+            {{#scalePoints}}
+            <div mod-role="enumeration-option" mod-port-value="{{value}}">{{label}}</div>
+            {{/scalePoints}}
+          </div>
+        </div>
+        {{/controls.0}}
     </div>
     <div class="mod-pedal-input">
         {{#effect.ports.audio.input}}
