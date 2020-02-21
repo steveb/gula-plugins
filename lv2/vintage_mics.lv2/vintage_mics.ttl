@@ -15,10 +15,17 @@
        lv2:optionalFeature epp:supportsStrictBounds ;
        lv2:optionalFeature lv2:hardRtCapable ;
        doap:maintainer [ foaf:name "GULA" ] ;
-       doap:revision "1.0.0" ;
+       doap:revision "2.0.0" ;
        doap:license "GPLv3" ;
 rdfs:comment """
-An Impulse Response plugin with the following impulses:
+An LV2 plugin which processes the signal with impulse responses from
+vintage microphones. The plugin packages impulse responses from the
+Microphone Impulse Response Project and these impulses are licensed as
+CC BY-SA 4.0.
+http://micirp.blogspot.com/
+https://creativecommons.org/licenses/by-sa/4.0/
+
+The following impulses are available:
 AKGD12
 AKG FaultyD12
 Altec 639

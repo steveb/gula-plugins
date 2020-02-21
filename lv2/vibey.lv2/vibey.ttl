@@ -14,7 +14,7 @@
        lv2:optionalFeature epp:supportsStrictBounds ;
        lv2:optionalFeature lv2:hardRtCapable ;
        doap:maintainer [ foaf:name "GULA" ] ;
-       doap:revision "1.1.0" ;
+       doap:revision "2.0.0" ;
        doap:license "GPLv3" ;
 rdfs:comment """
 A combination of vibrato and tremolo. The depth of

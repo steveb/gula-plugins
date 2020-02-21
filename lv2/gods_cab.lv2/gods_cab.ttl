@@ -15,10 +15,16 @@
        lv2:optionalFeature epp:supportsStrictBounds ;
        lv2:optionalFeature lv2:hardRtCapable ;
        doap:maintainer [ foaf:name "GULA" ] ;
-       doap:revision "1.0.0" ;
+       doap:revision "2.0.0" ;
        doap:license "GPLv3" ;
 rdfs:comment """
-An Impulse Response plugin with the following impulses:
+An LV2 plugin which processes the signal with impulse responses from the
+God's Cab collection created by Wilkinson Audio. Only a subset of the
+collection is included (room and TS impulses are removed,
+only presence=5 impulses are included).
+https://wilkinsonaudio.com/
+
+The following impulses are available:
 57 1 inch cap
 57 1 inch cone far
 57 1 inch cone near
