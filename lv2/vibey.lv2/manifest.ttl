@@ -2,8 +2,39 @@
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix pset: <http://lv2plug.in/ns/ext/presets#> .
 
 <https://github.com/steveb/gula-plugins/vibey>
     a lv2:Plugin ;
     lv2:binary <vibey.so> ;
     rdfs:seeAlso <vibey.ttl> , <modgui.ttl> .
+
+<https://github.com/steveb/gula-plugins/vibey#whirl>
+	a pset:Preset ;
+	lv2:appliesTo <https://github.com/steveb/gula-plugins/vibey> ;
+	rdfs:label "whirl" ;
+    rdfs:seeAlso <presets.ttl> .
+
+<https://github.com/steveb/gula-plugins/vibey#subtle>
+	a pset:Preset ;
+	lv2:appliesTo <https://github.com/steveb/gula-plugins/vibey> ;
+	rdfs:label "subtle" ;
+    rdfs:seeAlso <presets.ttl> .
+
+<https://github.com/steveb/gula-plugins/vibey#random_boost>
+	a pset:Preset ;
+	lv2:appliesTo <https://github.com/steveb/gula-plugins/vibey> ;
+	rdfs:label "random boost" ;
+    rdfs:seeAlso <presets.ttl> .
+
+<https://github.com/steveb/gula-plugins/vibey#chop>
+	a pset:Preset ;
+	lv2:appliesTo <https://github.com/steveb/gula-plugins/vibey> ;
+	rdfs:label "chop" ;
+    rdfs:seeAlso <presets.ttl> .
+
+<https://github.com/steveb/gula-plugins/vibey#ping_ping>
+	a pset:Preset ;
+	lv2:appliesTo <https://github.com/steveb/gula-plugins/vibey> ;
+	rdfs:label "ping ping" ;
+    rdfs:seeAlso <presets.ttl> .

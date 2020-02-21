@@ -1,0 +1,112 @@
+@prefix atom: <http://lv2plug.in/ns/ext/atom#> .
+@prefix lv2: <http://lv2plug.in/ns/lv2core#> .
+@prefix pset: <http://lv2plug.in/ns/ext/presets#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix state: <http://lv2plug.in/ns/ext/state#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://github.com/steveb/gula-plugins/vibey#whirl>
+	a pset:Preset ;
+	lv2:appliesTo <https://github.com/steveb/gula-plugins/vibey> ;
+	rdfs:label "whirl" ;
+	lv2:port [
+		lv2:symbol "rate_0" ;
+		pset:value 4.47142887
+	] , [
+		lv2:symbol "trem_depth_1" ;
+		pset:value 0.292411
+	] , [
+		lv2:symbol "trem_shape_2" ;
+		pset:value 1.0
+	] , [
+		lv2:symbol "vib_depth_3" ;
+		pset:value 0.22
+	] , [
+		lv2:symbol "vib_offset_4" ;
+		pset:value 0.49606299
+	] .
+
+<https://github.com/steveb/gula-plugins/vibey#subtle>
+	a pset:Preset ;
+	lv2:appliesTo <https://github.com/steveb/gula-plugins/vibey> ;
+	rdfs:label "subtle" ;
+	lv2:port [
+		lv2:symbol "rate_0" ;
+		pset:value 5.68214321
+	] , [
+		lv2:symbol "trem_depth_1" ;
+		pset:value 0.178571
+	] , [
+		lv2:symbol "trem_shape_2" ;
+		pset:value 1.0
+	] , [
+		lv2:symbol "vib_depth_3" ;
+		pset:value 0.075893
+	] , [
+		lv2:symbol "vib_offset_4" ;
+		pset:value 0.49606299
+	] .
+
+<https://github.com/steveb/gula-plugins/vibey#random_boost>
+	a pset:Preset ;
+	lv2:appliesTo <https://github.com/steveb/gula-plugins/vibey> ;
+	rdfs:label "random boost" ;
+	lv2:port [
+		lv2:symbol "rate_0" ;
+		pset:value 7.11785698
+	] , [
+		lv2:symbol "trem_depth_1" ;
+		pset:value 0.25892901
+	] , [
+		lv2:symbol "trem_shape_2" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "vib_depth_3" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "vib_offset_4" ;
+		pset:value 0.49606299
+	] .
+
+<https://github.com/steveb/gula-plugins/vibey#chop>
+	a pset:Preset ;
+	lv2:appliesTo <https://github.com/steveb/gula-plugins/vibey> ;
+	rdfs:label "chop" ;
+	lv2:port [
+		lv2:symbol "rate_0" ;
+		pset:value 5.0
+	] , [
+		lv2:symbol "trem_depth_1" ;
+		pset:value 1.0
+	] , [
+		lv2:symbol "trem_shape_2" ;
+		pset:value 2.5
+	] , [
+		lv2:symbol "vib_depth_3" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "vib_offset_4" ;
+		pset:value 0.49606299
+	] .
+
+<https://github.com/steveb/gula-plugins/vibey#ping_ping>
+	a pset:Preset ;
+	lv2:appliesTo <https://github.com/steveb/gula-plugins/vibey> ;
+	rdfs:label "ping ping" ;
+	lv2:port [
+		lv2:symbol "rate_0" ;
+		pset:value 5.0
+	] , [
+		lv2:symbol "trem_depth_1" ;
+		pset:value 1.0
+	] , [
+		lv2:symbol "trem_shape_2" ;
+		pset:value 3.99000001
+	] , [
+		lv2:symbol "vib_depth_3" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "vib_offset_4" ;
+		pset:value 0.49606299
+	] .
