@@ -15,7 +15,7 @@
        lv2:optionalFeature epp:supportsStrictBounds ;
        lv2:optionalFeature lv2:hardRtCapable ;
        doap:maintainer [ foaf:name "GULA" ] ;
-       doap:revision "2.0.0" ;
+       doap:revision "3.0.0" ;
        doap:license "GPLv3" ;
 rdfs:comment """
 An LV2 plugin which processes the signal with impulse responses from
