@@ -6,7 +6,7 @@ FAUSTARCH = lv2.cpp
 FAUSTLIB_SEARCH = /usr/share/faust/$(FAUSTARCH) /usr/local/share/faust/$(FAUSTARCH)
 FAUSTLIB = $(shell dirname `ls -f $(FAUSTLIB_SEARCH) 2>/dev/null | tail -1`)
 FAUSTINC = $(subst share,include,$(FAUSTLIB))
-FAUSTTOOLSFLAGS =
+FAUSTTOOLSFLAGS = -DURI_PREFIX=\"$(URI_PREFIX)\" -DFAUST_META=1 -DFAUST_MIDICC=0 -DFAUST_MTS=0
 
 # check CPU and supported optimization flags
 ifneq ($(shell cat /proc/cpuinfo | grep sse3 ) , )
@@ -29,11 +29,10 @@ else
 	SSE_CFLAGS =
 endif
 
-PROCARCH = -fPIC
-CXXFLAGS = -std=c++11 -ffast-math -ftree-vectorize -fstack-protector \
-	-funroll-loops -fomit-frame-pointer -fstrength-reduce -fdata-sections
-CXX = g++
-CPPFLAGS = -DURI_PREFIX=\"$(URI_PREFIX)\" -DFAUST_META=1 -DFAUST_MIDICC=0 -DFAUST_MTS=0
+CXXFLAGS += -fPIC -DPIC -std=c++11 -ffast-math -ftree-vectorize -fstack-protector \
+	-funroll-loops -fomit-frame-pointer -fstrength-reduce -fdata-sections \
+	-Wl,--gc-sections -Wl,-z,relro,-z,now $(SSE_CFLAGS)
+LDFLAGS += -shared -lm -Wl,-z,noexecstack
 
 cppsrc := $(plugins:.lv2=.cpp)
 buildlibs := $(plugins:.lv2=.so)
@@ -43,7 +42,7 @@ all: $(buildlibs)
 .PRECIOUS: $(cppsrc)
 
 %.so: %.cpp
-	$(CXX) -shared $(CXXFLAGS) $(SSE_CFLAGS) $(FAUSTTOOLSFLAGS) $(PROCARCH) $(CPPFLAGS) $^ -o $@
+	$(CXX) $(FAUSTTOOLSFLAGS) $(PROCARCH) $(CXXFLAGS) $(LDFLAGS) $^ -o $@
 	cp $@ ../lv2/$*.lv2/
 
 %.cpp: %.dsp
