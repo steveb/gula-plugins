@@ -3,8 +3,8 @@
 @prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
-<https://github.com/steveb/gula-plugins/splits>
+<https://github.com/steveb/gula-plugins/fades>
     a lv2:Plugin ;
-    lv2:binary <splits.so> ;
-    rdfs:seeAlso <splits.ttl> , <modgui.ttl> .
+    lv2:binary <fades.so> ;
+    rdfs:seeAlso <fades.ttl> , <modgui.ttl> .
 

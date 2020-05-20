@@ -44,6 +44,18 @@ The spread control determines how much of the input signal is sent to other outp
 * 0: This behaves like a switch between adjacent outputs
 * 1 -> 3: For higher spread values, the input signal is spread to 3 or more outputs
 
+The Fades
+=========
+An LV2 plugin which crossfades up to 4 inputs to one output.
+
+The fade control determines the mix of which inputs are sent to the output. This value
+is smoothed so that it can be modulated with minimal audible artifacts.
+
+The spread control determines how much of the other input signals is sent to output:
+* 1: This behaves like a crossfade. The fade value will mix 2 adjacent inputs in proportion to the fade fraction
+* 0: This behaves like a switch between adjacent inputs
+* 1 -> 3: For higher spread values, the mix includes 3 or more inputs
+
 Vintage Mics
 ============
 
