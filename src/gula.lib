@@ -64,3 +64,21 @@ with {
     amp = ba.lin2LogGain(depth) * dmax : si.smooth(0.999);
     osc = (os.oscp(freq, 6.28318 * offset : si.smooth(0.999)) + 1.0) * amp / 2.0;
 };
+
+gula_fade_gain(split, spread, origin) = fade_gain
+with {
+    hspread_comp = ba.if(spread >= 1.0, 0.0, 0.5 - (spread / 2.0));
+
+    // down slope linear interpololation
+    down_start = origin + hspread_comp;
+    down_end = down_start + spread;
+    gain_down = 1.0 + (-1.0 / (down_end - down_start)) * (split - down_start);
+
+    // up slope linear interpololation
+    up_end = origin - hspread_comp;
+    up_start = up_end - spread;
+    gain_up = (1.0 / (up_end - up_start)) * (split - up_start);
+
+    g = ba.if(split > origin, gain_down, gain_up);
+    fade_gain = ba.log2LinGain(clamp_control(g));
+};

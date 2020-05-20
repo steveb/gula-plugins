@@ -1,0 +1,82 @@
+@prefix doap:  <http://usefulinc.com/ns/doap#> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix lv2:   <http://lv2plug.in/ns/lv2core#> .
+@prefix ui:    <http://lv2plug.in/ns/extensions/ui#> .
+@prefix epp:   <http://lv2plug.in/ns/ext/port-props#> .
+@prefix atom:  <http://lv2plug.in/ns/ext/atom#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix units: <http://lv2plug.in/ns/extensions/units#> .
+<https://github.com/steveb/gula-plugins/splits>
+       a lv2:Plugin ;
+       doap:name "The Splits" ;
+       lv2:binary <splits.so> ;
+       lv2:optionalFeature epp:supportsStrictBounds ;
+       lv2:optionalFeature lv2:hardRtCapable ;
+       doap:maintainer [ foaf:name "GULA" ] ;
+       doap:revision "1.0.0" ;
+       doap:license "GPLv3" ;
+rdfs:comment """
+An LV2 plugin which sends a controllable proportion of the input to up to 4 outputs.
+
+The split control determines which output the input signal is sent to. This value
+is smoothed so that it can be modulated with minimal audible artifacts.
+
+The spread control determines how much of the input signal is sent to other outputs:
+1.0: This behaves like a crossfade in reverse. The split value will send the input to 2 adjacent outputs in proportion to the split fraction
+0.0: This behaves like a switch between adjacent outputs
+1.0 -> 3.0: For higher spread values, the input signal is spread to 3 or more outputs
+
+""";
+    lv2:port [
+	a lv2:InputPort ;
+	a lv2:ControlPort ;
+	lv2:index 0 ;
+	lv2:symbol "split_0" ;
+	lv2:name "Split" ;
+        lv2:portProperty epp:hasStrictBounds ;
+	lv2:default 1 ;
+	lv2:minimum 1 ;
+	lv2:maximum 4 ;
+    ] , [
+	a lv2:InputPort ;
+	a lv2:ControlPort ;
+	lv2:index 1 ;
+	lv2:symbol "spread_1" ;
+	lv2:name "Spread" ;
+        lv2:portProperty epp:hasStrictBounds ;
+	lv2:default 1 ;
+	lv2:minimum 0 ;
+	lv2:maximum 3 ;
+    ] , [
+	a lv2:InputPort ;
+	a lv2:AudioPort ;
+	lv2:index 2 ;
+	lv2:symbol "in0" ;
+	lv2:name "in0" ;
+    ] , [
+	a lv2:OutputPort ;
+	a lv2:AudioPort ;
+	lv2:index 3 ;
+	lv2:symbol "out0" ;
+	lv2:name "out0" ;
+    ] , [
+	a lv2:OutputPort ;
+	a lv2:AudioPort ;
+	lv2:index 4 ;
+	lv2:symbol "out1" ;
+	lv2:name "out1" ;
+    ] , [
+	a lv2:OutputPort ;
+	a lv2:AudioPort ;
+	lv2:index 5 ;
+	lv2:symbol "out2" ;
+	lv2:name "out2" ;
+    ] , [
+	a lv2:OutputPort ;
+	a lv2:AudioPort ;
+	lv2:index 6 ;
+	lv2:symbol "out3" ;
+	lv2:name "out3" ;
+    ]
+.

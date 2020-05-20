@@ -30,6 +30,20 @@ for each value:
 * 3 -> 4: saw (ascending) -> triangle -> saw (descending)
 * 4 -> 5: manual static value from 1 -> 0
 
+The Splits
+==========
+
+An LV2 plugin which sends a controllable proportion of the input to up to 4 outputs.
+
+The split control determines which output the input signal is sent to. This value
+is smoothed so that it can be modulated with minimal audible artifacts.
+
+The spread control determines how much of the input signal is sent to other outputs:
+* 1: This behaves like a crossfade in reverse. The split value will send the input
+     to 2 adjacent outputs in proportion to the split fraction
+* 0: This behaves like a switch between adjacent outputs
+* 1 -> 3: For higher spread values, the input signal is spread to 3 or more outputs
+
 Vintage Mics
 ============
 

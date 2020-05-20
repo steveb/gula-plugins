@@ -1,1 +1,6 @@
 *.so
+src/splits
+src/vibey
+src/vintage_mics
+src/gods_cab
+__pycache__
