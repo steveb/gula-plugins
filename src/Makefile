@@ -37,7 +37,7 @@ LDFLAGS += -shared -lm -Wl,-z,noexecstack
 cppsrc := $(plugins:.lv2=.cpp)
 buildlibs := $(plugins:.lv2=.so)
 
-all: $(buildlibs)
+all: $(buildlibs) split-slider.png spread-slider.png
 
 .PRECIOUS: $(cppsrc)
 
@@ -52,5 +52,15 @@ else
 	# Faust installation not found, using pre-generated $@
 endif
 
+split-slider.png: split-slider.py
+	./split-slider.py $@
+	cp $@ ../lv2/splits.lv2/modgui/
+
+
+spread-slider.png: split-slider.py
+	./split-slider.py $@
+	cp $@ ../lv2/splits.lv2/modgui/
+
 clean:
 	rm -f $(cppsrc) $(buildlibs)
+	rm -f *.png
