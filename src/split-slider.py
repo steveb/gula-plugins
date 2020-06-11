@@ -14,6 +14,8 @@ point_rad = 4
 point_dia = point_rad * 2
 height = 69 * 3
 positions = 90
+line_width = 3.0
+hline_width = line_width / 2.0
 
 line_color = (1, 211, 98, 255)
 alpha = 180
@@ -102,7 +104,7 @@ def gain(split, spread, origin):
 def draw_spread_slider(im, fade=False):
     d = aggdraw.Draw(im)
     for i in range(positions):
-        for origin in range(2):
+        for origin in range(4):
             draw_spread_gain(d, i, origin, fade=fade)
         draw_knob(d, i)
     d.flush()
@@ -114,18 +116,24 @@ def draw_spread_gain(d, i, origin, fade=False):
     off_y = point_rad + 2
 
     line = []
-    inner_width = width - 3
+    inner_width = width - 4
     for y in range(int(-point_rad), int(height + point_rad)):
+        yp = y + off_y
         split = (y * 3) / height
         g = gain(split, spread, origin)
         if g > 0.0 and g <= 1.0:
             if fade:
-                x = (g * (width - 3)) + 2
+                x = (g * inner_width) + 2
+                if x < width * 0.25:
+                    x = None
             else:
-                x = width - (g * (inner_width))
-                if origin == 1 and spread > 1.01 and spread < 1.03:
-                    print('{:.2f} {:.2f} {:d} {:d}'.format(split, g, int(x), int(y + off_y)))
-            line.extend((x + off_x, y + off_y))
+                x = width - (g * inner_width)
+                if x > width * 0.75:
+                    x = None
+            if x:
+                xp = x + off_x
+                point = (xp, yp)
+                line.extend(point)
     d.line(line, p)
 
     if fade:
