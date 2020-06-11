@@ -37,9 +37,9 @@ LDFLAGS += -shared -lm -Wl,-z,noexecstack
 cppsrc := $(plugins:.lv2=.cpp)
 buildlibs := $(plugins:.lv2=.so)
 
-images: split-slider.png spread-slider.png fade-slider.png fade-spread-slider.png
+all: $(buildlibs)
 
-all: $(buildlibs) $(images)
+images: split-slider.png spread-slider.png fade-slider.png fade-spread-slider.png
 
 .PRECIOUS: $(cppsrc)
 
