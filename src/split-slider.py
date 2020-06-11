@@ -28,7 +28,7 @@ image_width = width * positions
 image_height = height + knob_dia
 
 
-def draw_split_slider(im, i):
+def draw_split_slider(im, i, fade=False):
     d = aggdraw.Draw(im)
     p = aggdraw.Pen(line_color, 3)
 
@@ -42,12 +42,18 @@ def draw_split_slider(im, i):
     y2 = off_y + (height * split) - 2
     x1 = off_x + point_rad + 2
     x2 = off_x + width - point_rad - 2
+    p_rad = point_rad
 
-    d.arc((x1 - point_rad, y1 - point_rad, x1 + point_rad, y1 + point_rad),
+    if fade:
+        x1, x2 = x2, x1
+        x_inc = -x_inc
+        p_rad = -p_rad
+
+    d.arc((x1 - p_rad, y1 - p_rad, x1 + p_rad, y1 + p_rad),
           0, 360, p)
-    d.arc((x2 - point_rad, y2 - point_rad, x2 + point_rad, y2 + point_rad),
+    d.arc((x2 - p_rad, y2 - p_rad, x2 + p_rad, y2 + p_rad),
           0, 360, p)
-    d.line([x1 + point_rad, y1, x1 + x_inc, y1, x2 - x_inc, y2, x2 - point_rad, y2], p)
+    d.line([x1 + p_rad, y1, x1 + x_inc, y1, x2 - x_inc, y2, x2 - p_rad, y2], p)
     draw_knob(d, i)
     d.flush()
 
@@ -93,36 +99,42 @@ def gain(split, spread, origin):
     g = max(0.0, min(1.0, g))
     return g
 
-def draw_spread_slider(im):
+def draw_spread_slider(im, fade=False):
     d = aggdraw.Draw(im)
     for i in range(positions):
-        for origin in range(4):
-            draw_spread_gain(d, i, origin)
+        for origin in range(2):
+            draw_spread_gain(d, i, origin, fade=fade)
         draw_knob(d, i)
     d.flush()
 
-def draw_spread_gain(d, i, origin):
+def draw_spread_gain(d, i, origin, fade=False):
     spread = (i * 4) / positions
     p = aggdraw.Pen(spread_colors[origin], 3)
-    off_x = i * width
+    off_x = i * width - 1
     off_y = point_rad + 2
 
     line = []
-    for y_line in range(0, int(height)):
-        y = y_line + off_y
+    inner_width = width - 3
+    for y in range(int(-point_rad), int(height + point_rad)):
         split = (y * 3) / height
         g = gain(split, spread, origin)
-        if g:
-            x = off_x + width - (g * (width - 3))
-            line.extend((x, y))
+        if g > 0.0 and g <= 1.0:
+            if fade:
+                x = (g * (width - 3)) + 2
+            else:
+                x = width - (g * (inner_width))
+                if origin == 1 and spread > 1.01 and spread < 1.03:
+                    print('{:.2f} {:.2f} {:d} {:d}'.format(split, g, int(x), int(y + off_y)))
+            line.extend((x + off_x, y + off_y))
     d.line(line, p)
 
-    x_point = off_x + width - point_rad - 2
-    y_point = off_y + (origin / 3) * height
+    if fade:
+        x_point = off_x + point_rad + 3
+    else:
+        x_point = off_x + width - point_rad - 2
+    y_point = (origin / 3) * height + off_y
     d.arc((x_point - point_rad, y_point - point_rad, x_point + point_rad, y_point + point_rad),
           0, 360, p)
-    # split = 0
-    # y = split * h + origin * h
 
 def main():
 
@@ -137,6 +149,17 @@ def main():
         im = Image.new('RGBA', (image_width, image_height), (255, 255, 255, 0))
         draw_spread_slider(im)
         im.save('spread-slider.png', 'PNG', optimize=True)
+
+    if 'fade-slider.png' in args:
+        im = Image.new('RGBA', (image_width, image_height), (255,255,255,0))
+        for i in range(positions):
+            draw_split_slider(im, i, fade=True)
+        im.save('fade-slider.png', 'PNG', optimize=True)
+
+    if 'fade-spread-slider.png' in args:
+        im = Image.new('RGBA', (image_width, image_height), (255, 255, 255, 0))
+        draw_spread_slider(im, fade=True)
+        im.save('fade-spread-slider.png', 'PNG', optimize=True)
 
 if __name__ == "__main__":
     main()

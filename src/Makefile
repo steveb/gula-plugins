@@ -37,7 +37,9 @@ LDFLAGS += -shared -lm -Wl,-z,noexecstack
 cppsrc := $(plugins:.lv2=.cpp)
 buildlibs := $(plugins:.lv2=.so)
 
-all: $(buildlibs) split-slider.png spread-slider.png
+images: split-slider.png spread-slider.png fade-slider.png fade-spread-slider.png
+
+all: $(buildlibs) $(images)
 
 .PRECIOUS: $(cppsrc)
 
@@ -56,10 +58,17 @@ split-slider.png: split-slider.py
 	./split-slider.py $@
 	cp $@ ../lv2/splits.lv2/modgui/
 
-
 spread-slider.png: split-slider.py
 	./split-slider.py $@
 	cp $@ ../lv2/splits.lv2/modgui/
+
+fade-slider.png: split-slider.py
+	./split-slider.py $@
+	cp $@ ../lv2/fades.lv2/modgui/
+
+fade-spread-slider.png: split-slider.py
+	./split-slider.py $@
+	cp $@ ../lv2/fades.lv2/modgui/
 
 clean:
 	rm -f $(cppsrc) $(buildlibs)

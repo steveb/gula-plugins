@@ -105,14 +105,10 @@
 }
 .gula-splits{{{cns}}} .gula-slider .gula-slider-image-split_0 {
     background-image:url(/resources/split-slider.png{{{ns}}});
-    height:247px;
-    width:115px;
 }
 
 .gula-splits{{{cns}}} .gula-slider .gula-slider-image-spread_1 {
     background-image:url(/resources/spread-slider.png{{{ns}}});
-    height:247px;
-    width:115px;
 }
 
 .gula-splits{{{cns}}} .gula-slider .gula-slider-image:hover {
