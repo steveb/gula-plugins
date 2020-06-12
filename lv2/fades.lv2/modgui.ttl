@@ -11,11 +11,11 @@
         modgui:brand "GULA" ;
         modgui:label "The Fades" ;
         modgui:port [
-            lv2:index 1 ;
+            lv2:index 0 ;
             lv2:symbol "spread_1" ;
             lv2:name "Spread" ;
         ] , [
-            lv2:index 0 ;
+            lv2:index 1 ;
             lv2:symbol "fade_0" ;
             lv2:name "Fade" ;
         ] ;
