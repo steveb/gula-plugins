@@ -103,10 +103,10 @@
     width:115px;
 }
 
-.gula-fades{{{cns}}} .gula-slider .gula-slider-image-spread_0 {
+.gula-fades{{{cns}}} .gula-slider .gula-slider-image-spread_1 {
     background-image:url(/resources/fade-spread-slider.png{{{ns}}});
 }
-.gula-fades{{{cns}}} .gula-slider .gula-slider-image-fade_1 {
+.gula-fades{{{cns}}} .gula-slider .gula-slider-image-fade_0 {
     background-image:url(/resources/fade-slider.png{{{ns}}});
 }
 

@@ -16,7 +16,7 @@
        doap:maintainer [ foaf:name "GULA" ] ;
        doap:license "GPLv3" ;
 	   lv2:minorVersion 1;
-       lv2:microVersion 1;
+       lv2:microVersion 2;
 rdfs:comment """
 An LV2 plugin which crossfades up to 4 inputs to one output.
 
