@@ -16,7 +16,7 @@
        doap:maintainer [ foaf:name "GULA" ] ;
        doap:license "GPLv3" ;
 	   lv2:minorVersion 1;
-       lv2:microVersion 0;
+       lv2:microVersion 1;
 rdfs:comment """
 An LV2 plugin which crossfades up to 4 inputs to one output.
 
@@ -33,22 +33,22 @@ The spread control determines how much of the other input signals is sent to out
 	a lv2:InputPort ;
 	a lv2:ControlPort ;
 	lv2:index 0 ;
-	lv2:symbol "spread_0" ;
-	lv2:name "Spread" ;
-        lv2:portProperty epp:hasStrictBounds ;
-	lv2:default 1 ;
-	lv2:minimum 0 ;
-	lv2:maximum 3 ;
-    ] , [
-	a lv2:InputPort ;
-	a lv2:ControlPort ;
-	lv2:index 1 ;
-	lv2:symbol "fade_1" ;
+	lv2:symbol "fade_0" ;
 	lv2:name "Fade" ;
         lv2:portProperty epp:hasStrictBounds ;
 	lv2:default 1 ;
 	lv2:minimum 1 ;
 	lv2:maximum 4 ;
+    ] , [
+	a lv2:InputPort ;
+	a lv2:ControlPort ;
+	lv2:index 1 ;
+	lv2:symbol "spread_1" ;
+	lv2:name "Spread" ;
+        lv2:portProperty epp:hasStrictBounds ;
+	lv2:default 1 ;
+	lv2:minimum 0 ;
+	lv2:maximum 3 ;
     ] , [
 	a lv2:InputPort ;
 	a lv2:AudioPort ;
