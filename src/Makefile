@@ -1,4 +1,4 @@
-plugins := vibey.lv2 vintage_mics.lv2 gods_cab.lv2 splits.lv2 fades.lv2
+plugins := vibey.lv2 splits.lv2 fades.lv2
 
 URI_PREFIX = https://github.com/steveb/gula-plugins
 
