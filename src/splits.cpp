@@ -3,7 +3,6 @@ author: "Gula Plugins"
 copyright: "Steve Baker (2020)"
 license: "GPLv3"
 name: "The Splits"
-version: "1.0.0"
 Code generated with Faust 2.22.5 (https://faust.grame.fr)
 Compilation options: -lang cpp -scal -ftz 0
 ------------------------------------------------------------ */
@@ -632,7 +631,6 @@ class splits : public dsp {
 		m->declare("name", "The Splits");
 		m->declare("signals.lib/name", "Faust Signal Routing Library");
 		m->declare("signals.lib/version", "0.0");
-		m->declare("version", "1.0.0");
 	}
 
 	virtual int getNumInputs() {
