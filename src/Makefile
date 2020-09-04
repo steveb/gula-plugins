@@ -1,4 +1,4 @@
-plugins := vibey.lv2 vintage_mics.lv2 gods_cab.lv2 splits.lv2 fades.lv2
+plugins := vibey.lv2 vintage_mics.lv2 gods_cab.lv2 splits.lv2 fades.lv2 pikelet.lv2
 
 URI_PREFIX = https://github.com/steveb/gula-plugins
 
@@ -29,7 +29,7 @@ else
 	SSE_CFLAGS =
 endif
 
-CXXFLAGS += -fPIC -DPIC -std=c++11 -ffast-math -ftree-vectorize -fstack-protector \
+CXXFLAGS += -I. -fPIC -DPIC -std=c++11 -ffast-math -ftree-vectorize -fstack-protector \
 	-funroll-loops -fomit-frame-pointer -fstrength-reduce -fdata-sections \
 	-Wl,--gc-sections -Wl,-z,relro,-z,now $(SSE_CFLAGS)
 LDFLAGS += -shared -lm -Wl,-z,noexecstack
@@ -51,6 +51,10 @@ ifneq ($(FAUSTLIB),)
 else
 	# Faust installation not found, using pre-generated $@
 endif
+
+# generated with ./build-plug.py --buildlv2 --input Pikelet.sch --name Pikelet --table 1
+pikelet.cpp: gx_pikelet.cpp gx_pikelet.h gx_pluginlv2.h pikelet.cc pikelet_table.h
+	cp gx_pikelet.cpp pikelet.cpp
 
 clean:
 	rm -f $(cppsrc) $(buildlibs)

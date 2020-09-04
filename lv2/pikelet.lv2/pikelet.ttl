@@ -1,0 +1,82 @@
+@prefix doap: <http://usefulinc.com/ns/doap#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix lv2: <http://lv2plug.in/ns/lv2core#> .
+@prefix ui:    <http://lv2plug.in/ns/extensions/ui#> .
+@prefix epp:   <http://lv2plug.in/ns/ext/port-props#> .
+@prefix atom:  <http://lv2plug.in/ns/ext/atom#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix time: <http://lv2plug.in/ns/ext/time#>.
+@prefix units: <http://lv2plug.in/ns/extensions/units#> .
+
+<https://github.com/steveb/gula-plugins/pikelet>
+    a doap:Project ;
+    doap:maintainer [ foaf:name "GULA" ] ;
+    doap:name "Pikelet" .
+
+<https://github.com/steveb/gula-plugins/pikelet#_pikelet_>
+    a lv2:Plugin , lv2:DistortionPlugin ;
+    doap:maintainer [ foaf:name "GULA" ] ;
+    doap:name "Pikelet" ;
+    lv2:binary <pikelet.so> ;
+    lv2:optionalFeature epp:supportsStrictBounds ;
+    lv2:optionalFeature lv2:hardRtCapable ;
+    doap:revision "1.0.0" ;
+    doap:license "GPLv3" ;
+
+rdfs:comment """
+A distortion plugin inspired by the Crowther Audio Hotcake pedal.
+""";
+
+    lv2:port  [
+        a lv2:AudioPort ,
+            lv2:OutputPort ;
+        lv2:index 0 ;
+        lv2:symbol "out" ;
+        lv2:name "Out"
+    ] , [
+        a lv2:AudioPort ,
+            lv2:InputPort ;
+        lv2:index 1 ;
+        lv2:symbol "in" ;
+        lv2:name "In" ;
+    ] , [
+        a lv2:InputPort ,
+            lv2:ControlPort ;
+        lv2:index 2 ;
+        lv2:symbol "BYPASS" ;
+        lv2:name "BYPASS" ;
+        lv2:default 1.0 ;
+        lv2:minimum 0.0 ;
+        lv2:maximum 1.0 ;
+        lv2:designation lv2:enabled;
+        lv2:portProperty lv2:toggled;
+    ] 
+      , [
+        a lv2:InputPort ,
+            lv2:ControlPort ;
+        lv2:index 3 ;
+        lv2:symbol "DRIVE" ;
+        lv2:name "DRIVE" ;
+        lv2:default 0.5 ;
+        lv2:minimum 0.0 ;
+        lv2:maximum 1.0 ;
+    ]      , [
+        a lv2:InputPort ,
+            lv2:ControlPort ;
+        lv2:index 4 ;
+        lv2:symbol "PRESENCE" ;
+        lv2:name "PRESENCE" ;
+        lv2:default 0.5 ;
+        lv2:minimum 0.0 ;
+        lv2:maximum 1.0 ;
+    ]      , [
+        a lv2:InputPort ,
+            lv2:ControlPort ;
+        lv2:index 5 ;
+        lv2:symbol "VOLUME" ;
+        lv2:name "VOLUME" ;
+        lv2:default 0.5 ;
+        lv2:minimum 0.0 ;
+        lv2:maximum 1.0 ;
+    ] .
