@@ -52,7 +52,7 @@ else
 	# Faust installation not found, using pre-generated $@
 endif
 
-# generated with ./build-plug.py --buildlv2 --input Pikelet.sch --name Pikelet --table 1
+# generated with ./build-plug.py --buildlv2 --input Pikelet.sch --name Pikelet --table 1 --sig_max 1.0
 pikelet.cpp: gx_pikelet.cpp gx_pikelet.h gx_pluginlv2.h pikelet.cc pikelet_table.h
 	cp gx_pikelet.cpp pikelet.cpp
 

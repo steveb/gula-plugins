@@ -114,7 +114,7 @@ refdes=U1
 T 45400 47000 5 10 0 0 0 0 1
 symversion=0.1
 T 45300 46400 5 10 1 1 0 0 1
-value=Vcc=10,Vee=0,A=1e6
+value=Vcc=9,Vee=0,A=1e6
 }
 N 41200 46200 41900 46200 4
 {
@@ -152,7 +152,7 @@ device=RESISTOR
 T 46700 42300 5 10 1 1 180 0 1
 refdes=R6
 T 46400 41800 5 10 1 1 0 0 1
-value=8k
+value=5k
 }
 N 46200 41600 46200 41400 4
 C 47400 46000 1 270 0 capacitor-1.sym
@@ -208,7 +208,7 @@ device=POWER
 T 43300 48100 5 10 1 1 0 0 1
 refdes=Vref
 T 43600 47700 5 10 1 1 0 0 1
-value=2
+value=4.5
 }
 N 43500 47700 43500 47200 4
 C 52700 44900 1 180 0 capacitor-1.sym
