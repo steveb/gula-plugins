@@ -55,5 +55,15 @@ The spread control determines how much of the other input signals is sent to out
 * 0: This behaves like a switch between adjacent inputs
 * 1 -> 3: For higher spread values, the mix includes 3 or more inputs
 
+SSaP Tone
+=========
+Tone shaping with a low shelf, a high shelf and a parametric EQ, all on the same frequency.
+
+This is an attempt at replacing the classic amp tone stack using digital filter modules.
+The bass and treble controls are shelf filters which can raise or lower by 20dB. The midrange
+is a parametric EQ which includes its own Q value. The frequency for all three filters is determined
+by a single frequency value. The result is a pedal flexible enough to do subtle tone shaping, wah effects,
+, strong midrange scoops, or midrange boosts.
+
 .. _Faust installation: https://faust.grame.fr/doc/manual/index.html#compiling-and-installing-the-faust-compiler
 .. _MOD Devices: https://www.moddevices.com/

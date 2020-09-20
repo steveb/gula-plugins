@@ -1,0 +1,121 @@
+@prefix doap:  <http://usefulinc.com/ns/doap#> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix lv2:   <http://lv2plug.in/ns/lv2core#> .
+@prefix ui:    <http://lv2plug.in/ns/extensions/ui#> .
+@prefix epp:   <http://lv2plug.in/ns/ext/port-props#> .
+@prefix atom:  <http://lv2plug.in/ns/ext/atom#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix units: <http://lv2plug.in/ns/extensions/units#> .
+<https://github.com/steveb/gula-plugins/ssap_tone>
+       a lv2:Plugin ;
+       doap:name "SSaP Tone" ;
+       lv2:binary <ssap_tone.so> ;
+       lv2:optionalFeature epp:supportsStrictBounds ;
+       lv2:optionalFeature lv2:hardRtCapable ;
+       doap:maintainer [ foaf:name "GULA" ] ;
+       doap:revision "1.0.0" ;
+       doap:license "GPLv3" ;
+       rdfs:comment """
+Tone shaping with a low shelf, a high shelf and a parametric EQ, all on the same frequency.
+
+This is an attempt at replacing the classic amp tone stack using digital filter modules.
+The bass and treble controls are shelf filters which can raise or lower by 20dB. The midrange
+is a parametric EQ which includes its own Q value. The frequency for all three filters is determined
+by a single frequency value. The result is a pedal flexible enough to do subtle tone shaping, wah effects,
+, strong midrange scoops, or midrange boosts.
+""" ;
+    lv2:port [
+	a lv2:InputPort ;
+	a lv2:ControlPort ;
+	lv2:index 0 ;
+	lv2:symbol "freq_0" ;
+	lv2:name "freq" ;
+        lv2:portProperty epp:hasStrictBounds ;
+        epp:rangeSteps 180 ;
+	lv2:default 900 ;
+	lv2:minimum 200 ;
+	lv2:maximum 2000 ;
+    lv2:portProperty epp:logarithmic;
+	units:unit [
+            a            units:Unit ;
+            units:name   "hz" ;
+            units:symbol "Hz" ;
+            units:render "%f Hz"
+	] ;
+    ] , [
+	a lv2:InputPort ;
+	a lv2:ControlPort ;
+	lv2:index 1 ;
+	lv2:symbol "bass_1" ;
+	lv2:name "bass" ;
+        lv2:portProperty epp:hasStrictBounds ;
+        epp:rangeSteps 400 ;
+	lv2:default 0 ;
+	lv2:minimum -20 ;
+	lv2:maximum 20 ;
+	units:unit [
+            a            units:Unit ;
+            units:name   "dB" ;
+            units:symbol "dB" ;
+            units:render "%f dB"
+	] ;
+    ] , [
+	a lv2:InputPort ;
+	a lv2:ControlPort ;
+	lv2:index 2 ;
+	lv2:symbol "mid_2" ;
+	lv2:name "mid" ;
+        lv2:portProperty epp:hasStrictBounds ;
+        epp:rangeSteps 400 ;
+	lv2:default 0 ;
+	lv2:minimum -20 ;
+	lv2:maximum 20 ;
+	units:unit [
+            a            units:Unit ;
+            units:name   "dB" ;
+            units:symbol "dB" ;
+            units:render "%f dB"
+	] ;
+    ] , [
+	a lv2:InputPort ;
+	a lv2:ControlPort ;
+	lv2:index 3 ;
+	lv2:symbol "mid_q_3" ;
+	lv2:name "mid_q" ;
+        lv2:portProperty epp:hasStrictBounds ;
+        epp:rangeSteps 39 ;
+	lv2:default 1 ;
+	lv2:minimum 0.1 ;
+	lv2:maximum 4 ;
+    ] , [
+	a lv2:InputPort ;
+	a lv2:ControlPort ;
+	lv2:index 4 ;
+	lv2:symbol "treble_4" ;
+	lv2:name "treble" ;
+        lv2:portProperty epp:hasStrictBounds ;
+        epp:rangeSteps 400 ;
+	lv2:default 0 ;
+	lv2:minimum -20 ;
+	lv2:maximum 20 ;
+	units:unit [
+            a            units:Unit ;
+            units:name   "dB" ;
+            units:symbol "dB" ;
+            units:render "%f dB"
+	] ;
+    ] , [
+	a lv2:InputPort ;
+	a lv2:AudioPort ;
+	lv2:index 5 ;
+	lv2:symbol "in0" ;
+	lv2:name "in0" ;
+    ] , [
+	a lv2:OutputPort ;
+	a lv2:AudioPort ;
+	lv2:index 6 ;
+	lv2:symbol "out0" ;
+	lv2:name "out0" ;
+    ]
+.
