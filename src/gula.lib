@@ -1,5 +1,6 @@
 
 ba = library("basics.lib");
+fi = library("filters.lib");
 ma = library("maths.lib");
 si = library("signals.lib");
 no = library("noises.lib");
@@ -82,3 +83,5 @@ with {
     g = ba.if(split > origin, gain_down, gain_up);
     fade_gain = ba.log2LinGain(clamp_control(g));
 };
+
+gula_ssap_tone(freq, bass, mid, mid_q, treble) = fi.lowshelf(3,bass,freq) : fi.highshelf(3,treble,freq) : fi.peak_eq_cq(mid, freq, mid_q);
