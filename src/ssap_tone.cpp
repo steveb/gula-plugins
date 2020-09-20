@@ -859,10 +859,10 @@ class ssap_tone : public dsp {
 		FAUSTFLOAT* input0 = inputs[0];
 		FAUSTFLOAT* output0 = outputs[0];
 		float fSlow0 = (0.00499999989f * float(fHslider0));
-		float fSlow1 = (0.00499999989f * float(fHslider1));
-		float fSlow2 = (0.00499999989f * float(fHslider2));
-		float fSlow3 = (0.00499999989f * float(fHslider3));
-		float fSlow4 = (0.00499999989f * float(fHslider4));
+		float fSlow1 = (0.00100000005f * float(fHslider1));
+		float fSlow2 = (0.00100000005f * float(fHslider2));
+		float fSlow3 = (0.00100000005f * float(fHslider3));
+		float fSlow4 = (0.00100000005f * float(fHslider4));
 		for (int i = 0; (i < count); i = (i + 1)) {
 			fRec0[0] = (fSlow0 + (0.995000005f * fRec0[1]));
 			float fTemp0 = std::tan((fConst1 * fRec0[0]));
@@ -881,18 +881,18 @@ class ssap_tone : public dsp {
 			fRec4[0] = (fRec5[0] - (((fRec4[2] * fTemp9) + (2.0f * (fRec4[1] * fTemp2))) / fTemp10));
 			fRec7[0] = (0.0f - (((fTemp8 * fRec7[1]) - (fTemp7 + fVec0[1])) / fTemp5));
 			fRec6[0] = (fRec7[0] - (((fTemp9 * fRec6[2]) + (2.0f * (fTemp2 * fRec6[1]))) / fTemp10));
-			fRec8[0] = (fSlow1 + (0.995000005f * fRec8[1]));
+			fRec8[0] = (fSlow1 + (0.999000013f * fRec8[1]));
 			float fTemp11 = ((((fRec4[1] * fTemp3) + (fRec4[0] / fTemp1)) + (fRec4[2] / fTemp1)) + ((fRec6[2] + (fRec6[0] + (2.0f * fRec6[1]))) * std::pow(10.0f, (0.0500000007f * fRec8[0]))));
 			float fTemp12 = (fTemp11 / fTemp10);
 			fVec1[0] = fTemp12;
 			fRec3[0] = ((fTemp6 * fVec1[1]) - (((fRec3[1] * fTemp8) - (fTemp11 / (fTemp0 * fTemp10))) / fTemp5));
 			fRec2[0] = (fRec3[0] - (((fTemp9 * fRec2[2]) + (2.0f * (fTemp2 * fRec2[1]))) / fTemp10));
-			fRec9[0] = (fSlow2 + (0.995000005f * fRec9[1]));
+			fRec9[0] = (fSlow2 + (0.999000013f * fRec9[1]));
 			fRec11[0] = (0.0f - (((fTemp8 * fRec11[1]) - (fTemp12 + fVec1[1])) / fTemp5));
 			fRec10[0] = (fRec11[0] - (((fTemp9 * fRec10[2]) + (2.0f * (fTemp2 * fRec10[1]))) / fTemp10));
-			fRec12[0] = (fSlow3 + (0.995000005f * fRec12[1]));
+			fRec12[0] = (fSlow3 + (0.999000013f * fRec12[1]));
 			int iTemp13 = (fRec12[0] > 0.0f);
-			fRec13[0] = (fSlow4 + (0.995000005f * fRec13[1]));
+			fRec13[0] = (fSlow4 + (0.999000013f * fRec13[1]));
 			float fTemp14 = (fRec13[0] * std::sin((fConst2 * fRec0[0])));
 			float fTemp15 = (fConst1 * ((fRec0[0] * std::pow(10.0f, (0.0500000007f * std::fabs(fRec12[0])))) / fTemp14));
 			float fTemp16 = (fConst1 * (fRec0[0] / fTemp14));
