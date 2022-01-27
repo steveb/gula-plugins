@@ -36,12 +36,12 @@ by a single frequency value. The result is a pedal flexible enough to do subtle 
 	lv2:default 900 ;
 	lv2:minimum 200 ;
 	lv2:maximum 2000 ;
-    lv2:portProperty epp:logarithmic;
+	lv2:portProperty epp:logarithmic;
 	units:unit [
-            a            units:Unit ;
-            units:name   "hz" ;
-            units:symbol "Hz" ;
-            units:render "%f Hz"
+		a            units:Unit ;
+		units:name   "hz" ;
+		units:symbol "Hz" ;
+		units:render "%f Hz"
 	] ;
     ] , [
 	a lv2:InputPort ;
