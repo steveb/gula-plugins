@@ -1,7 +1,6 @@
 declare name "The Splits";
 declare author "Gula Plugins";
 declare copyright "Steve Baker (2020)";
-declare version "1.0.0";
 declare license "GPLv3";
 declare description "An LV2 plugin which sends a controllable proportion of the input to each output";
 

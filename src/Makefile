@@ -1,4 +1,4 @@
-plugins := vibey.lv2 vintage_mics.lv2 gods_cab.lv2 splits.lv2 fades.lv2
+plugins := vibey.lv2 splits.lv2 fades.lv2
 
 URI_PREFIX = https://github.com/steveb/gula-plugins
 
@@ -39,6 +39,8 @@ buildlibs := $(plugins:.lv2=.so)
 
 all: $(buildlibs)
 
+images: split-slider.png spread-slider.png fade-slider.png fade-spread-slider.png
+
 .PRECIOUS: $(cppsrc)
 
 %.so: %.cpp
@@ -52,5 +54,22 @@ else
 	# Faust installation not found, using pre-generated $@
 endif
 
+split-slider.png: split-slider.py
+	./split-slider.py $@
+	cp $@ ../lv2/splits.lv2/modgui/
+
+spread-slider.png: split-slider.py
+	./split-slider.py $@
+	cp $@ ../lv2/splits.lv2/modgui/
+
+fade-slider.png: split-slider.py
+	./split-slider.py $@
+	cp $@ ../lv2/fades.lv2/modgui/
+
+fade-spread-slider.png: split-slider.py
+	./split-slider.py $@
+	cp $@ ../lv2/fades.lv2/modgui/
+
 clean:
 	rm -f $(cppsrc) $(buildlibs)
+	rm -f *.png
