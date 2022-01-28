@@ -4,8 +4,8 @@ copyright: "Steve Baker (2019)"
 license: "GPLv3"
 name: "The Vibey"
 version: "1.0.0"
-Code generated with Faust 2.22.5 (https://faust.grame.fr)
-Compilation options: -lang cpp -scal -ftz 0
+Code generated with Faust 2.32.16 (https://faust.grame.fr)
+Compilation options: -a /usr/local/share/faust/lv2.cpp -lang cpp -es 1 -single -ftz 0
 ------------------------------------------------------------ */
 
 #ifndef  __vibey_H__
@@ -117,13 +117,13 @@ class dsp {
     
         /**
          * Trigger the ui_interface parameter with instance specific calls
-         * to 'addBtton', 'addVerticalSlider'... in order to build the UI.
+         * to 'openTabBox', 'addButton', 'addVerticalSlider'... in order to build the UI.
          *
          * @param ui_interface - the user interface builder
          */
         virtual void buildUserInterface(UI* ui_interface) = 0;
     
-        /* Returns the sample rate currently used by the instance */
+        /* Return the sample rate currently used by the instance */
         virtual int getSampleRate() = 0;
     
         /**
@@ -131,28 +131,28 @@ class dsp {
          * - static class 'classInit': static tables initialization
          * - 'instanceInit': constants and instance state initialization
          *
-         * @param sample_rate - the sampling rate in Hertz
+         * @param sample_rate - the sampling rate in Hz
          */
         virtual void init(int sample_rate) = 0;
 
         /**
          * Init instance state
          *
-         * @param sample_rate - the sampling rate in Hertz
+         * @param sample_rate - the sampling rate in Hz
          */
         virtual void instanceInit(int sample_rate) = 0;
-
+    
         /**
          * Init instance constant state
          *
-         * @param sample_rate - the sampling rate in Hertz
+         * @param sample_rate - the sampling rate in Hz
          */
         virtual void instanceConstants(int sample_rate) = 0;
     
         /* Init default control parameters values */
         virtual void instanceResetUserInterface() = 0;
     
-        /* Init instance state (delay lines...) */
+        /* Init instance state (like delay lines...) but keep the control parameter values */
         virtual void instanceClear() = 0;
  
         /**
@@ -225,7 +225,8 @@ class decorator_dsp : public dsp {
 };
 
 /**
- * DSP factory class.
+ * DSP factory class, used with LLVM and Interpreter backends
+ * to create DSP instances from a compiled DSP program.
  */
 
 class dsp_factory {
@@ -268,7 +269,7 @@ class dsp_factory {
 #endif
 
 #endif
-/**************************  END  dsp.h **************************/
+/************************** END dsp.h **************************/
 /************************** BEGIN UI.h **************************/
 /************************************************************************
  FAUST Architecture File
@@ -342,6 +343,9 @@ struct UIReal
     // -- metadata declarations
     
     virtual void declare(REAL* zone, const char* key, const char* val) {}
+    
+    // To be used by LLVM client
+    virtual int sizeOfFAUSTFLOAT() { return sizeof(FAUSTFLOAT); }
 };
 
 struct UI : public UIReal<FAUSTFLOAT>
@@ -598,12 +602,14 @@ void LV2UI::run() {}
 
 #include <algorithm>
 #include <cmath>
+#include <cstdint>
 #include <math.h>
 
 class vibeySIG0 {
 	
   private:
 	
+	int iVec1[2];
 	int iRec5[2];
 	
   public:
@@ -614,41 +620,22 @@ class vibeySIG0 {
 	int getNumOutputsvibeySIG0() {
 		return 1;
 	}
-	int getInputRatevibeySIG0(int channel) {
-		int rate;
-		switch ((channel)) {
-			default: {
-				rate = -1;
-				break;
-			}
-		}
-		return rate;
-	}
-	int getOutputRatevibeySIG0(int channel) {
-		int rate;
-		switch ((channel)) {
-			case 0: {
-				rate = 0;
-				break;
-			}
-			default: {
-				rate = -1;
-				break;
-			}
-		}
-		return rate;
-	}
 	
 	void instanceInitvibeySIG0(int sample_rate) {
 		for (int l6 = 0; (l6 < 2); l6 = (l6 + 1)) {
-			iRec5[l6] = 0;
+			iVec1[l6] = 0;
+		}
+		for (int l7 = 0; (l7 < 2); l7 = (l7 + 1)) {
+			iRec5[l7] = 0;
 		}
 	}
 	
 	void fillvibeySIG0(int count, float* table) {
-		for (int i = 0; (i < count); i = (i + 1)) {
-			iRec5[0] = (iRec5[1] + 1);
-			table[i] = std::sin((9.58738019e-05f * float((iRec5[0] + -1))));
+		for (int i1 = 0; (i1 < count); i1 = (i1 + 1)) {
+			iVec1[0] = 1;
+			iRec5[0] = ((iVec1[1] + iRec5[1]) % 65536);
+			table[i1] = std::sin((9.58738019e-05f * float(iRec5[0])));
+			iVec1[1] = iVec1[0];
 			iRec5[1] = iRec5[0];
 		}
 	}
@@ -662,6 +649,7 @@ class vibeySIG1 {
 	
   private:
 	
+	int iVec3[2];
 	int iRec15[2];
 	
   public:
@@ -672,41 +660,22 @@ class vibeySIG1 {
 	int getNumOutputsvibeySIG1() {
 		return 1;
 	}
-	int getInputRatevibeySIG1(int channel) {
-		int rate;
-		switch ((channel)) {
-			default: {
-				rate = -1;
-				break;
-			}
-		}
-		return rate;
-	}
-	int getOutputRatevibeySIG1(int channel) {
-		int rate;
-		switch ((channel)) {
-			case 0: {
-				rate = 0;
-				break;
-			}
-			default: {
-				rate = -1;
-				break;
-			}
-		}
-		return rate;
-	}
 	
 	void instanceInitvibeySIG1(int sample_rate) {
-		for (int l17 = 0; (l17 < 2); l17 = (l17 + 1)) {
-			iRec15[l17] = 0;
+		for (int l18 = 0; (l18 < 2); l18 = (l18 + 1)) {
+			iVec3[l18] = 0;
+		}
+		for (int l19 = 0; (l19 < 2); l19 = (l19 + 1)) {
+			iRec15[l19] = 0;
 		}
 	}
 	
 	void fillvibeySIG1(int count, float* table) {
-		for (int i = 0; (i < count); i = (i + 1)) {
-			iRec15[0] = (iRec15[1] + 1);
-			table[i] = std::cos((9.58738019e-05f * float((iRec15[0] + -1))));
+		for (int i2 = 0; (i2 < count); i2 = (i2 + 1)) {
+			iVec3[0] = 1;
+			iRec15[0] = ((iVec3[1] + iRec15[1]) % 65536);
+			table[i2] = std::cos((9.58738019e-05f * float(iRec15[0])));
+			iVec3[1] = iVec3[0];
 			iRec15[1] = iRec15[0];
 		}
 	}
@@ -757,7 +726,7 @@ class vibey : public dsp {
 	int iRec12[2];
 	float fRec10[2];
 	int IOTA;
-	float fVec1[2048];
+	float fVec2[2048];
 	FAUSTFLOAT fHslider3;
 	float fRec13[2];
 	FAUSTFLOAT fHslider4;
@@ -769,6 +738,7 @@ class vibey : public dsp {
 		m->declare("author", "Gula Plugins");
 		m->declare("basics.lib/name", "Faust Basic Element Library");
 		m->declare("basics.lib/version", "0.1");
+		m->declare("compile_options", "-a /usr/local/share/faust/lv2.cpp -lang cpp -es 1 -single -ftz 0");
 		m->declare("copyright", "Steve Baker (2019)");
 		m->declare("delays.lib/name", "Faust Delay Library");
 		m->declare("delays.lib/version", "0.1");
@@ -789,17 +759,18 @@ class vibey : public dsp {
 		m->declare("filters.lib/tf1s:author", "Julius O. Smith III");
 		m->declare("filters.lib/tf1s:copyright", "Copyright (C) 2003-2019 by Julius O. Smith III <jos@ccrma.stanford.edu>");
 		m->declare("filters.lib/tf1s:license", "MIT-style STK-4.3 license");
+		m->declare("filters.lib/version", "0.3");
 		m->declare("license", "GPLv3");
 		m->declare("maths.lib/author", "GRAME");
 		m->declare("maths.lib/copyright", "GRAME");
 		m->declare("maths.lib/license", "LGPL with exception");
 		m->declare("maths.lib/name", "Faust Math Library");
-		m->declare("maths.lib/version", "2.2");
+		m->declare("maths.lib/version", "2.3");
 		m->declare("name", "The Vibey");
 		m->declare("noises.lib/name", "Faust Noise Generator Library");
 		m->declare("noises.lib/version", "0.0");
 		m->declare("oscillators.lib/name", "Faust Oscillator Library");
-		m->declare("oscillators.lib/version", "0.0");
+		m->declare("oscillators.lib/version", "0.1");
 		m->declare("platform.lib/name", "Generic Platform Library");
 		m->declare("platform.lib/version", "0.1");
 		m->declare("signals.lib/name", "Faust Signal Routing Library");
@@ -812,38 +783,6 @@ class vibey : public dsp {
 	}
 	virtual int getNumOutputs() {
 		return 2;
-	}
-	virtual int getInputRate(int channel) {
-		int rate;
-		switch ((channel)) {
-			case 0: {
-				rate = 1;
-				break;
-			}
-			default: {
-				rate = -1;
-				break;
-			}
-		}
-		return rate;
-	}
-	virtual int getOutputRate(int channel) {
-		int rate;
-		switch ((channel)) {
-			case 0: {
-				rate = 1;
-				break;
-			}
-			case 1: {
-				rate = 1;
-				break;
-			}
-			default: {
-				rate = -1;
-				break;
-			}
-		}
-		return rate;
 	}
 	
 	static void classInit(int sample_rate) {
@@ -892,36 +831,36 @@ class vibey : public dsp {
 		for (int l5 = 0; (l5 < 2); l5 = (l5 + 1)) {
 			fRec0[l5] = 0.0f;
 		}
-		for (int l7 = 0; (l7 < 2); l7 = (l7 + 1)) {
-			fRec6[l7] = 0.0f;
-		}
 		for (int l8 = 0; (l8 < 2); l8 = (l8 + 1)) {
-			iRec9[l8] = 0;
+			fRec6[l8] = 0.0f;
 		}
 		for (int l9 = 0; (l9 < 2); l9 = (l9 + 1)) {
-			fRec8[l9] = 0.0f;
+			iRec9[l9] = 0;
 		}
 		for (int l10 = 0; (l10 < 2); l10 = (l10 + 1)) {
-			fRec7[l10] = 0.0f;
+			fRec8[l10] = 0.0f;
 		}
 		for (int l11 = 0; (l11 < 2); l11 = (l11 + 1)) {
-			iRec11[l11] = 0;
+			fRec7[l11] = 0.0f;
 		}
 		for (int l12 = 0; (l12 < 2); l12 = (l12 + 1)) {
-			iRec12[l12] = 0;
+			iRec11[l12] = 0;
 		}
 		for (int l13 = 0; (l13 < 2); l13 = (l13 + 1)) {
-			fRec10[l13] = 0.0f;
+			iRec12[l13] = 0;
+		}
+		for (int l14 = 0; (l14 < 2); l14 = (l14 + 1)) {
+			fRec10[l14] = 0.0f;
 		}
 		IOTA = 0;
-		for (int l14 = 0; (l14 < 2048); l14 = (l14 + 1)) {
-			fVec1[l14] = 0.0f;
-		}
-		for (int l15 = 0; (l15 < 2); l15 = (l15 + 1)) {
-			fRec13[l15] = 0.0f;
+		for (int l15 = 0; (l15 < 2048); l15 = (l15 + 1)) {
+			fVec2[l15] = 0.0f;
 		}
 		for (int l16 = 0; (l16 < 2); l16 = (l16 + 1)) {
-			fRec14[l16] = 0.0f;
+			fRec13[l16] = 0.0f;
+		}
+		for (int l17 = 0; (l17 < 2); l17 = (l17 + 1)) {
+			fRec14[l17] = 0.0f;
 		}
 	}
 	
@@ -998,7 +937,7 @@ class vibey : public dsp {
 		float fSlow27 = (1.0f / float(iSlow24));
 		float fSlow28 = (1.02400005f * vibey_faustpower2_f(float(fHslider3)));
 		float fSlow29 = (0.00628317986f * float(fHslider4));
-		for (int i = 0; (i < count); i = (i + 1)) {
+		for (int i0 = 0; (i0 < count); i0 = (i0 + 1)) {
 			iVec0[0] = 1;
 			fRec2[0] = ((fSlow14 * fRec3[1]) + (fSlow15 * fRec2[1]));
 			fRec3[0] = ((float((1 - iVec0[1])) + (fSlow15 * fRec3[1])) - (fSlow14 * fRec2[1]));
@@ -1018,8 +957,8 @@ class vibey : public dsp {
 			iRec12[0] = ((iRec12[1] + 1) % std::max<int>(1, int((iSlow24 * iTemp4))));
 			fRec10[0] = ((0.99000001f * fRec10[1]) + (0.00999999978f * (iTemp4 ? (fSlow27 * float(iRec12[0])) : (1.0f - (fSlow26 * float(iRec11[0]))))));
 			float fTemp5 = (fSlow1 * (iSlow4 ? (iSlow23 ? fSlow8 : fRec10[0]) : (iSlow5 ? fRec8[0] : (iSlow6 ? fRec7[0] : ((fSlow8 * std::min<float>(std::max<float>((0.5f * (fRec0[0] + 1.0f)), 0.0f), 1.0f)) + (fSlow17 * fTemp3))))));
-			float fTemp6 = float(input0[i]);
-			fVec1[(IOTA & 2047)] = fTemp6;
+			float fTemp6 = float(input0[i0]);
+			fVec2[(IOTA & 2047)] = fTemp6;
 			fRec13[0] = (fSlow28 + (0.999000013f * fRec13[1]));
 			fRec14[0] = (fSlow29 + (0.999000013f * fRec14[1]));
 			float fTemp7 = std::min<float>(1024.0f, (0.5f * (fRec13[0] * (((std::cos(fRec14[0]) * fTemp2) + (std::sin(fRec14[0]) * ftbl1vibeySIG1[iTemp1])) + 1.0f))));
@@ -1029,9 +968,9 @@ class vibey : public dsp {
 			float fTemp11 = (fTemp7 + (-1.0f - fTemp10));
 			float fTemp12 = (fTemp7 + (-2.0f - fTemp10));
 			float fTemp13 = (fTemp7 + (-3.0f - fTemp10));
-			float fTemp14 = ((((fVec1[((IOTA - std::min<int>(1024, std::max<int>(0, iTemp9))) & 2047)] * (0.0f - fTemp11)) * (0.0f - (0.5f * fTemp12))) * (0.0f - (0.333333343f * fTemp13))) + ((fTemp7 - fTemp10) * ((((fVec1[((IOTA - std::min<int>(1024, std::max<int>(0, (iTemp9 + 1)))) & 2047)] * (0.0f - fTemp12)) * (0.0f - (0.5f * fTemp13))) + (0.5f * ((fTemp11 * fVec1[((IOTA - std::min<int>(1024, std::max<int>(0, (iTemp9 + 2)))) & 2047)]) * (0.0f - fTemp13)))) + (0.166666672f * ((fTemp11 * fTemp12) * fVec1[((IOTA - std::min<int>(1024, std::max<int>(0, (iTemp9 + 3)))) & 2047)])))));
-			output0[i] = FAUSTFLOAT(((fSlow0 + fTemp5) * fTemp14));
-			output1[i] = FAUSTFLOAT((fTemp14 * ((1.0f - fTemp5) - fSlow0)));
+			float fTemp14 = ((((fVec2[((IOTA - std::min<int>(1024, std::max<int>(0, iTemp9))) & 2047)] * (0.0f - fTemp11)) * (0.0f - (0.5f * fTemp12))) * (0.0f - (0.333333343f * fTemp13))) + ((fTemp7 - fTemp10) * ((((fVec2[((IOTA - std::min<int>(1024, std::max<int>(0, (iTemp9 + 1)))) & 2047)] * (0.0f - fTemp12)) * (0.0f - (0.5f * fTemp13))) + (0.5f * ((fTemp11 * fVec2[((IOTA - std::min<int>(1024, std::max<int>(0, (iTemp9 + 2)))) & 2047)]) * (0.0f - fTemp13)))) + (0.166666672f * ((fTemp11 * fTemp12) * fVec2[((IOTA - std::min<int>(1024, std::max<int>(0, (iTemp9 + 3)))) & 2047)])))));
+			output0[i0] = FAUSTFLOAT(((fSlow0 + fTemp5) * fTemp14));
+			output1[i0] = FAUSTFLOAT((fTemp14 * ((1.0f - fTemp5) - fSlow0)));
 			iVec0[1] = iVec0[0];
 			fRec2[1] = fRec2[0];
 			fRec3[1] = fRec3[0];
@@ -2614,12 +2553,14 @@ int lv2_dyn_manifest_get_data(LV2_Dyn_Manifest_Handle handle,
 @prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n\
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .\n\
 @prefix units: <http://lv2plug.in/ns/extensions/units#> .\n\
+@prefix urid:  <http://lv2plug.in/ns/ext/urid#> .\n\
 <%s>\n\
        a lv2:Plugin%s ;\n\
        doap:name \"%s\" ;\n\
        lv2:binary <vibey%s> ;\n\
+       lv2:requiredFeature urid:map ;\n\
        lv2:optionalFeature epp:supportsStrictBounds ;\n\
-       lv2:optionalFeature lv2:hardRtCapable ;\n", PLUGIN_URI,
+       lv2:optionalFeature lv2:hardRTCapable ;\n", PLUGIN_URI,
 	  is_instr?", lv2:InstrumentPlugin":"",
 	  plugin_name, DLLEXT);
   if (plugin_author && *plugin_author)

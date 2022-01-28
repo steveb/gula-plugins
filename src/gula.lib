@@ -83,3 +83,18 @@ with {
     g = ba.if(split > origin, gain_down, gain_up);
     fade_gain = ba.log2LinGain(clamp_control(g));
 };
+
+gula_ab_filter(freq_a, gain_a, q_a, freq_b, gain_b, q_b, ab_sweep, n) = fi.peak_eq_cq(gain, freq, q, n)
+with {
+    q = q_a, q_b : si.interpolate(ab_sweep);
+    gain = gain_a, gain_b : si.interpolate(ba.lin2LogGain(ab_sweep));
+    freq = freq_a, freq_b : si.interpolate(ba.lin2LogGain(ab_sweep));
+};
+
+gula_ab_amp(attack, release, peak_decay, n) = ab_amp_scaled
+with {
+    ab_amp = an.amp_follower_ar(attack, release, n);
+    range_max = an.amp_follower(peak_decay, n),0.01 : max : si.smooth(0.999) : hbargraph("range", 0, 1) ;
+    ab_mult = 1.0 / range_max;
+    ab_amp_scaled = scale(0, ab_mult, ab_amp) : clamp(0, 1) : hbargraph("sweep", 0, 1);
+};

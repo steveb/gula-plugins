@@ -1,0 +1,38 @@
+@prefix modgui: <http://moddevices.com/ns/modgui#> .
+@prefix lv2:    <http://lv2plug.in/ns/lv2core#> .
+
+<https://github.com/steveb/gula-plugins/sweabed>
+    modgui:gui [
+        modgui:resourcesDirectory <modgui> ;
+        modgui:iconTemplate <modgui/icon-ab-sweep.html> ;
+        modgui:stylesheet <modgui/stylesheet-ab-sweep.css> ;
+        modgui:screenshot <modgui/screenshot-ab-sweep.png> ;
+        modgui:thumbnail <modgui/thumbnail-ab-sweep.png> ;
+        modgui:brand "GULA" ;
+        modgui:label "Sweabed" ;
+        modgui:model "boxy" ;
+        modgui:panel "7-knobs" ;
+        modgui:color "black" ;
+        modgui:knob "black" ;
+        modgui:port [
+            lv2:index 0 ;
+            lv2:symbol "freq_a_0" ;
+            lv2:name "Freq A" ;
+        ] , [
+            lv2:index 1 ;
+            lv2:symbol "gain_a_1" ;
+            lv2:name "Gain A" ;
+        ] , [
+            lv2:index 2 ;
+            lv2:symbol "freq_b_2" ;
+            lv2:name "Freq B" ;
+        ] , [
+            lv2:index 3 ;
+            lv2:symbol "gain_b_3" ;
+            lv2:name "Gain B" ;
+        ] , [
+            lv2:index 4 ;
+            lv2:symbol "ab_sweep_4" ;
+            lv2:name "AB Sweep" ;
+        ] ;
+    ] .

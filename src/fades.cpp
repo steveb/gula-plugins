@@ -3,8 +3,8 @@ author: "Gula Plugins"
 copyright: "Steve Baker (2020)"
 license: "GPLv3"
 name: "The Fades"
-Code generated with Faust 2.22.5 (https://faust.grame.fr)
-Compilation options: -lang cpp -scal -ftz 0
+Code generated with Faust 2.32.16 (https://faust.grame.fr)
+Compilation options: -a /usr/local/share/faust/lv2.cpp -lang cpp -es 1 -single -ftz 0
 ------------------------------------------------------------ */
 
 #ifndef  __fades_H__
@@ -116,13 +116,13 @@ class dsp {
     
         /**
          * Trigger the ui_interface parameter with instance specific calls
-         * to 'addBtton', 'addVerticalSlider'... in order to build the UI.
+         * to 'openTabBox', 'addButton', 'addVerticalSlider'... in order to build the UI.
          *
          * @param ui_interface - the user interface builder
          */
         virtual void buildUserInterface(UI* ui_interface) = 0;
     
-        /* Returns the sample rate currently used by the instance */
+        /* Return the sample rate currently used by the instance */
         virtual int getSampleRate() = 0;
     
         /**
@@ -130,28 +130,28 @@ class dsp {
          * - static class 'classInit': static tables initialization
          * - 'instanceInit': constants and instance state initialization
          *
-         * @param sample_rate - the sampling rate in Hertz
+         * @param sample_rate - the sampling rate in Hz
          */
         virtual void init(int sample_rate) = 0;
 
         /**
          * Init instance state
          *
-         * @param sample_rate - the sampling rate in Hertz
+         * @param sample_rate - the sampling rate in Hz
          */
         virtual void instanceInit(int sample_rate) = 0;
-
+    
         /**
          * Init instance constant state
          *
-         * @param sample_rate - the sampling rate in Hertz
+         * @param sample_rate - the sampling rate in Hz
          */
         virtual void instanceConstants(int sample_rate) = 0;
     
         /* Init default control parameters values */
         virtual void instanceResetUserInterface() = 0;
     
-        /* Init instance state (delay lines...) */
+        /* Init instance state (like delay lines...) but keep the control parameter values */
         virtual void instanceClear() = 0;
  
         /**
@@ -224,7 +224,8 @@ class decorator_dsp : public dsp {
 };
 
 /**
- * DSP factory class.
+ * DSP factory class, used with LLVM and Interpreter backends
+ * to create DSP instances from a compiled DSP program.
  */
 
 class dsp_factory {
@@ -267,7 +268,7 @@ class dsp_factory {
 #endif
 
 #endif
-/**************************  END  dsp.h **************************/
+/************************** END dsp.h **************************/
 /************************** BEGIN UI.h **************************/
 /************************************************************************
  FAUST Architecture File
@@ -341,6 +342,9 @@ struct UIReal
     // -- metadata declarations
     
     virtual void declare(REAL* zone, const char* key, const char* val) {}
+    
+    // To be used by LLVM client
+    virtual int sizeOfFAUSTFLOAT() { return sizeof(FAUSTFLOAT); }
 };
 
 struct UI : public UIReal<FAUSTFLOAT>
@@ -597,6 +601,7 @@ void LV2UI::run() {}
 
 #include <algorithm>
 #include <cmath>
+#include <cstdint>
 
 
 #ifndef FAUSTCLASS 
@@ -624,6 +629,7 @@ class fades : public dsp {
 		m->declare("author", "Gula Plugins");
 		m->declare("basics.lib/name", "Faust Basic Element Library");
 		m->declare("basics.lib/version", "0.1");
+		m->declare("compile_options", "-a /usr/local/share/faust/lv2.cpp -lang cpp -es 1 -single -ftz 0");
 		m->declare("copyright", "Steve Baker (2020)");
 		m->declare("description", "An LV2 plugin which crossfades up to 4 inputs to one output");
 		m->declare("filename", "fades.dsp");
@@ -638,46 +644,6 @@ class fades : public dsp {
 	}
 	virtual int getNumOutputs() {
 		return 1;
-	}
-	virtual int getInputRate(int channel) {
-		int rate;
-		switch ((channel)) {
-			case 0: {
-				rate = 1;
-				break;
-			}
-			case 1: {
-				rate = 1;
-				break;
-			}
-			case 2: {
-				rate = 1;
-				break;
-			}
-			case 3: {
-				rate = 1;
-				break;
-			}
-			default: {
-				rate = -1;
-				break;
-			}
-		}
-		return rate;
-	}
-	virtual int getOutputRate(int channel) {
-		int rate;
-		switch ((channel)) {
-			case 0: {
-				rate = 1;
-				break;
-			}
-			default: {
-				rate = -1;
-				break;
-			}
-		}
-		return rate;
 	}
 	
 	static void classInit(int sample_rate) {
@@ -736,13 +702,13 @@ class fades : public dsp {
 		FAUSTFLOAT* output0 = outputs[0];
 		float fSlow0 = (0.000500000024f * (float(fHslider0) + -1.0f));
 		float fSlow1 = (0.00100000005f * float(fHslider1));
-		for (int i = 0; (i < count); i = (i + 1)) {
+		for (int i0 = 0; (i0 < count); i0 = (i0 + 1)) {
 			fRec0[0] = (fSlow0 + (0.999499977f * fRec0[1]));
 			fRec1[0] = (fSlow1 + (0.999000013f * fRec1[1]));
 			float fTemp0 = ((fRec1[0] >= 1.0f) ? 0.0f : (0.5f * (1.0f - fRec1[0])));
 			float fTemp1 = (fTemp0 + (fRec0[0] + fRec1[0]));
 			float fTemp2 = (0.0f - (1.0f / fRec1[0]));
-			output0[i] = FAUSTFLOAT(((((float(input0[i]) * std::sqrt(std::min<float>(std::max<float>(((fRec0[0] > 0.0f) ? ((fTemp2 * (fRec0[0] - fTemp0)) + 1.0f) : (fTemp1 / fRec1[0])), 0.0f), 1.0f))) + (float(input1[i]) * std::sqrt(std::min<float>(std::max<float>(((fRec0[0] > 1.0f) ? ((fTemp2 * (fRec0[0] + (-1.0f - fTemp0))) + 1.0f) : ((fTemp1 + -1.0f) / fRec1[0])), 0.0f), 1.0f)))) + (float(input2[i]) * std::sqrt(std::min<float>(std::max<float>(((fRec0[0] > 2.0f) ? ((fTemp2 * (fRec0[0] + (-2.0f - fTemp0))) + 1.0f) : ((fTemp1 + -2.0f) / fRec1[0])), 0.0f), 1.0f)))) + (float(input3[i]) * std::sqrt(std::min<float>(std::max<float>(((fRec0[0] > 3.0f) ? ((fTemp2 * (fRec0[0] + (-3.0f - fTemp0))) + 1.0f) : ((fTemp1 + -3.0f) / fRec1[0])), 0.0f), 1.0f)))));
+			output0[i0] = FAUSTFLOAT(((((float(input0[i0]) * std::sqrt(std::min<float>(std::max<float>(((fRec0[0] > 0.0f) ? ((fTemp2 * (fRec0[0] - fTemp0)) + 1.0f) : (fTemp1 / fRec1[0])), 0.0f), 1.0f))) + (float(input1[i0]) * std::sqrt(std::min<float>(std::max<float>(((fRec0[0] > 1.0f) ? ((fTemp2 * (fRec0[0] + (-1.0f - fTemp0))) + 1.0f) : ((fTemp1 + -1.0f) / fRec1[0])), 0.0f), 1.0f)))) + (float(input2[i0]) * std::sqrt(std::min<float>(std::max<float>(((fRec0[0] > 2.0f) ? ((fTemp2 * (fRec0[0] + (-2.0f - fTemp0))) + 1.0f) : ((fTemp1 + -2.0f) / fRec1[0])), 0.0f), 1.0f)))) + (float(input3[i0]) * std::sqrt(std::min<float>(std::max<float>(((fRec0[0] > 3.0f) ? ((fTemp2 * (fRec0[0] + (-3.0f - fTemp0))) + 1.0f) : ((fTemp1 + -3.0f) / fRec1[0])), 0.0f), 1.0f)))));
 			fRec0[1] = fRec0[0];
 			fRec1[1] = fRec1[0];
 		}
@@ -2311,12 +2277,14 @@ int lv2_dyn_manifest_get_data(LV2_Dyn_Manifest_Handle handle,
 @prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n\
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .\n\
 @prefix units: <http://lv2plug.in/ns/extensions/units#> .\n\
+@prefix urid:  <http://lv2plug.in/ns/ext/urid#> .\n\
 <%s>\n\
        a lv2:Plugin%s ;\n\
        doap:name \"%s\" ;\n\
        lv2:binary <fades%s> ;\n\
+       lv2:requiredFeature urid:map ;\n\
        lv2:optionalFeature epp:supportsStrictBounds ;\n\
-       lv2:optionalFeature lv2:hardRtCapable ;\n", PLUGIN_URI,
+       lv2:optionalFeature lv2:hardRTCapable ;\n", PLUGIN_URI,
 	  is_instr?", lv2:InstrumentPlugin":"",
 	  plugin_name, DLLEXT);
   if (plugin_author && *plugin_author)

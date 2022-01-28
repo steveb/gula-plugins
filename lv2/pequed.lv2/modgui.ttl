@@ -1,0 +1,42 @@
+@prefix modgui: <http://moddevices.com/ns/modgui#> .
+@prefix lv2:    <http://lv2plug.in/ns/lv2core#> .
+
+<https://github.com/steveb/gula-plugins/pequed>
+    modgui:gui [
+        modgui:resourcesDirectory <modgui> ;
+        modgui:iconTemplate <modgui/icon-pequed.html> ;
+        modgui:stylesheet <modgui/stylesheet-pequed.css> ;
+        modgui:screenshot <modgui/screenshot-pequed.png> ;
+        modgui:thumbnail <modgui/thumbnail-pequed.png> ;
+        modgui:brand "GULA" ;
+        modgui:label "Pequed" ;
+        modgui:model "boxy" ;
+        modgui:panel "7-knobs" ;
+        modgui:color "black" ;
+        modgui:knob "black" ;
+        modgui:port [
+            lv2:index 0 ;
+            lv2:symbol "freq_b_0" ;
+            lv2:name "Freq Hi" ;
+        ] , [
+            lv2:index 1 ;
+            lv2:symbol "gain_b_1" ;
+            lv2:name "Gain Hi" ;
+        ] , [
+            lv2:index 2 ;
+            lv2:symbol "freq_a_2" ;
+            lv2:name "Freq Lo" ;
+        ] , [
+            lv2:index 3 ;
+            lv2:symbol "gain_a_3" ;
+            lv2:name "Gain Lo" ;
+        ] , [
+            lv2:index 4 ;
+            lv2:symbol "attack_4" ;
+            lv2:name "Attack" ;
+        ] , [
+            lv2:index 5 ;
+            lv2:symbol "release_5" ;
+            lv2:name "Release" ;
+        ] ;
+    ] .

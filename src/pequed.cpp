@@ -1,14 +1,15 @@
 /* ------------------------------------------------------------
-author: "Gula Plugins"
-copyright: "Steve Baker (2020)"
+author: "GULA"
+copyright: "Steve Baker (2022)"
 license: "GPLv3"
-name: "The Splits"
+name: "Pequed"
+version: "1.0.0"
 Code generated with Faust 2.32.16 (https://faust.grame.fr)
 Compilation options: -a /usr/local/share/faust/lv2.cpp -lang cpp -es 1 -single -ftz 0
 ------------------------------------------------------------ */
 
-#ifndef  __splits_H__
-#define  __splits_H__
+#ifndef  __pequed_H__
+#define  __pequed_H__
 
 /************************************************************************
  ************************************************************************
@@ -602,10 +603,14 @@ void LV2UI::run() {}
 #include <algorithm>
 #include <cmath>
 #include <cstdint>
+#include <math.h>
 
+static float pequed_faustpower2_f(float value) {
+	return (value * value);
+}
 
 #ifndef FAUSTCLASS 
-#define FAUSTCLASS splits
+#define FAUSTCLASS pequed
 #endif
 
 #ifdef __APPLE__ 
@@ -613,37 +618,80 @@ void LV2UI::run() {}
 #define exp10 __exp10
 #endif
 
-class splits : public dsp {
+class pequed : public dsp {
 	
  private:
 	
-	FAUSTFLOAT fHslider0;
-	float fRec0[2];
-	FAUSTFLOAT fHslider1;
-	float fRec1[2];
 	int fSampleRate;
+	float fConst1;
+	FAUSTFLOAT fHslider0;
+	FAUSTFLOAT fHslider1;
+	FAUSTFLOAT fHslider2;
+	float fConst2;
+	FAUSTFLOAT fHslider3;
+	float fRec2[2];
+	float fRec1[2];
+	float fRec4[2];
+	float fRec3[2];
+	FAUSTFLOAT fHbargraph0;
+	FAUSTFLOAT fHbargraph1;
+	FAUSTFLOAT fHslider4;
+	FAUSTFLOAT fHslider5;
+	float fConst3;
+	float fRec0[3];
 	
  public:
 	
 	void metadata(Meta* m) { 
-		m->declare("author", "Gula Plugins");
+		m->declare("analyzers.lib/name", "Faust Analyzer Library");
+		m->declare("analyzers.lib/version", "0.1");
+		m->declare("author", "GULA");
 		m->declare("basics.lib/name", "Faust Basic Element Library");
 		m->declare("basics.lib/version", "0.1");
 		m->declare("compile_options", "-a /usr/local/share/faust/lv2.cpp -lang cpp -es 1 -single -ftz 0");
-		m->declare("copyright", "Steve Baker (2020)");
-		m->declare("description", "An LV2 plugin which sends a controllable proportion of the input to each output");
-		m->declare("filename", "splits.dsp");
+		m->declare("copyright", "Steve Baker (2022)");
+		m->declare("description", "Midrange parametic EQ with high and low values interpolated based on the peak amplitude");
+		m->declare("filename", "pequed.dsp");
+		m->declare("filters.lib/fir:author", "Julius O. Smith III");
+		m->declare("filters.lib/fir:copyright", "Copyright (C) 2003-2019 by Julius O. Smith III <jos@ccrma.stanford.edu>");
+		m->declare("filters.lib/fir:license", "MIT-style STK-4.3 license");
+		m->declare("filters.lib/iir:author", "Julius O. Smith III");
+		m->declare("filters.lib/iir:copyright", "Copyright (C) 2003-2019 by Julius O. Smith III <jos@ccrma.stanford.edu>");
+		m->declare("filters.lib/iir:license", "MIT-style STK-4.3 license");
+		m->declare("filters.lib/lowpass0_highpass1", "MIT-style STK-4.3 license");
+		m->declare("filters.lib/name", "Faust Filters Library");
+		m->declare("filters.lib/peak_eq:author", "Julius O. Smith III");
+		m->declare("filters.lib/peak_eq:copyright", "Copyright (C) 2003-2019 by Julius O. Smith III <jos@ccrma.stanford.edu>");
+		m->declare("filters.lib/peak_eq:license", "MIT-style STK-4.3 license");
+		m->declare("filters.lib/peak_eq_cq:author", "Julius O. Smith III");
+		m->declare("filters.lib/peak_eq_cq:copyright", "Copyright (C) 2003-2019 by Julius O. Smith III <jos@ccrma.stanford.edu>");
+		m->declare("filters.lib/peak_eq_cq:license", "MIT-style STK-4.3 license");
+		m->declare("filters.lib/tf2:author", "Julius O. Smith III");
+		m->declare("filters.lib/tf2:copyright", "Copyright (C) 2003-2019 by Julius O. Smith III <jos@ccrma.stanford.edu>");
+		m->declare("filters.lib/tf2:license", "MIT-style STK-4.3 license");
+		m->declare("filters.lib/tf2s:author", "Julius O. Smith III");
+		m->declare("filters.lib/tf2s:copyright", "Copyright (C) 2003-2019 by Julius O. Smith III <jos@ccrma.stanford.edu>");
+		m->declare("filters.lib/tf2s:license", "MIT-style STK-4.3 license");
+		m->declare("filters.lib/version", "0.3");
 		m->declare("license", "GPLv3");
-		m->declare("name", "The Splits");
+		m->declare("maths.lib/author", "GRAME");
+		m->declare("maths.lib/copyright", "GRAME");
+		m->declare("maths.lib/license", "LGPL with exception");
+		m->declare("maths.lib/name", "Faust Math Library");
+		m->declare("maths.lib/version", "2.3");
+		m->declare("name", "Pequed");
+		m->declare("platform.lib/name", "Generic Platform Library");
+		m->declare("platform.lib/version", "0.1");
 		m->declare("signals.lib/name", "Faust Signal Routing Library");
 		m->declare("signals.lib/version", "0.0");
+		m->declare("version", "1.0.0");
 	}
 
 	virtual int getNumInputs() {
 		return 1;
 	}
 	virtual int getNumOutputs() {
-		return 4;
+		return 1;
 	}
 	
 	static void classInit(int sample_rate) {
@@ -651,19 +699,36 @@ class splits : public dsp {
 	
 	virtual void instanceConstants(int sample_rate) {
 		fSampleRate = sample_rate;
+		float fConst0 = std::min<float>(192000.0f, std::max<float>(1.0f, float(fSampleRate)));
+		fConst1 = (3.14159274f / fConst0);
+		fConst2 = (1.0f / fConst0);
+		fConst3 = (6.28318548f / fConst0);
 	}
 	
 	virtual void instanceResetUserInterface() {
-		fHslider0 = FAUSTFLOAT(1.0f);
-		fHslider1 = FAUSTFLOAT(1.0f);
+		fHslider0 = FAUSTFLOAT(900.0f);
+		fHslider1 = FAUSTFLOAT(900.0f);
+		fHslider2 = FAUSTFLOAT(0.01f);
+		fHslider3 = FAUSTFLOAT(0.5f);
+		fHslider4 = FAUSTFLOAT(0.0f);
+		fHslider5 = FAUSTFLOAT(0.0f);
 	}
 	
 	virtual void instanceClear() {
 		for (int l0 = 0; (l0 < 2); l0 = (l0 + 1)) {
-			fRec0[l0] = 0.0f;
+			fRec2[l0] = 0.0f;
 		}
 		for (int l1 = 0; (l1 < 2); l1 = (l1 + 1)) {
 			fRec1[l1] = 0.0f;
+		}
+		for (int l2 = 0; (l2 < 2); l2 = (l2 + 1)) {
+			fRec4[l2] = 0.0f;
+		}
+		for (int l3 = 0; (l3 < 2); l3 = (l3 + 1)) {
+			fRec3[l3] = 0.0f;
+		}
+		for (int l4 = 0; (l4 < 3); l4 = (l4 + 1)) {
+			fRec0[l4] = 0.0f;
 		}
 	}
 	
@@ -677,8 +742,8 @@ class splits : public dsp {
 		instanceClear();
 	}
 	
-	virtual splits* clone() {
-		return new splits();
+	virtual pequed* clone() {
+		return new pequed();
 	}
 	
 	virtual int getSampleRate() {
@@ -686,35 +751,87 @@ class splits : public dsp {
 	}
 	
 	virtual void buildUserInterface(UI* ui_interface) {
-		ui_interface->openVerticalBox("The Splits");
-		ui_interface->declare(&fHslider0, "name", "Split Proportion");
-		ui_interface->addHorizontalSlider("split", &fHslider0, 1.0f, 1.0f, 4.0f, 0.00100000005f);
-		ui_interface->declare(&fHslider1, "name", "Spread Overlap");
-		ui_interface->addHorizontalSlider("spread", &fHslider1, 1.0f, 0.0f, 3.0f, 0.00100000005f);
+		ui_interface->openVerticalBox("Pequed");
+		ui_interface->declare(&fHslider1, "01", "");
+		ui_interface->declare(&fHslider1, "name", "Freq Hi");
+		ui_interface->declare(&fHslider1, "tooltip", "frequency (Hz)");
+		ui_interface->addHorizontalSlider("freq_b", &fHslider1, 900.0f, 100.0f, 2400.0f, 10.0f);
+		ui_interface->declare(&fHslider5, "02", "");
+		ui_interface->declare(&fHslider5, "name", "Gain Hi");
+		ui_interface->declare(&fHslider5, "unit", "dB");
+		ui_interface->addHorizontalSlider("gain_b", &fHslider5, 0.0f, -40.0f, 40.0f, 0.100000001f);
+		ui_interface->declare(&fHslider0, "03", "");
+		ui_interface->declare(&fHslider0, "name", "Freq Lo");
+		ui_interface->declare(&fHslider0, "tooltip", "frequency (Hz)");
+		ui_interface->addHorizontalSlider("freq_a", &fHslider0, 900.0f, 100.0f, 2400.0f, 10.0f);
+		ui_interface->declare(&fHslider4, "04", "");
+		ui_interface->declare(&fHslider4, "name", "Gain Lo");
+		ui_interface->declare(&fHslider4, "unit", "dB");
+		ui_interface->addHorizontalSlider("gain_a", &fHslider4, 0.0f, -40.0f, 40.0f, 0.100000001f);
+		ui_interface->declare(&fHslider2, "05", "");
+		ui_interface->declare(&fHslider2, "name", "Attack");
+		ui_interface->declare(&fHslider2, "unit", "s");
+		ui_interface->addHorizontalSlider("attack", &fHslider2, 0.00999999978f, 0.0f, 0.5f, 0.00999999978f);
+		ui_interface->declare(&fHslider3, "06", "");
+		ui_interface->declare(&fHslider3, "name", "Release");
+		ui_interface->declare(&fHslider3, "unit", "s");
+		ui_interface->addHorizontalSlider("release", &fHslider3, 0.5f, 0.0f, 2.0f, 0.00999999978f);
+		ui_interface->addHorizontalBargraph("range", &fHbargraph0, 0.0f, 1.0f);
+		ui_interface->addHorizontalBargraph("sweep", &fHbargraph1, 0.0f, 1.0f);
 		ui_interface->closeBox();
 	}
 	
 	virtual void compute(int count, FAUSTFLOAT** inputs, FAUSTFLOAT** outputs) {
 		FAUSTFLOAT* input0 = inputs[0];
 		FAUSTFLOAT* output0 = outputs[0];
-		FAUSTFLOAT* output1 = outputs[1];
-		FAUSTFLOAT* output2 = outputs[2];
-		FAUSTFLOAT* output3 = outputs[3];
-		float fSlow0 = (0.000500000024f * (float(fHslider0) + -1.0f));
-		float fSlow1 = (0.00100000005f * float(fHslider1));
+		float fSlow0 = float(fHslider0);
+		float fSlow1 = (float(fHslider1) - fSlow0);
+		float fSlow2 = float(fHslider2);
+		int iSlow3 = (std::fabs(fSlow2) < 1.1920929e-07f);
+		float fSlow4 = (iSlow3 ? 0.0f : std::exp((0.0f - (fConst2 / (iSlow3 ? 1.0f : fSlow2)))));
+		float fSlow5 = float(fHslider3);
+		int iSlow6 = (std::fabs(fSlow5) < 1.1920929e-07f);
+		float fSlow7 = (iSlow6 ? 0.0f : std::exp((0.0f - (fConst2 / (iSlow6 ? 1.0f : fSlow5)))));
+		float fSlow8 = (10.0f * fSlow5);
+		int iSlow9 = (std::fabs(fSlow8) < 1.1920929e-07f);
+		float fSlow10 = (iSlow9 ? 0.0f : std::exp((0.0f - (fConst2 / (iSlow9 ? 1.0f : fSlow8)))));
+		float fSlow11 = (1.0f - fSlow10);
+		float fSlow12 = float(fHslider4);
+		float fSlow13 = float(fHslider5);
+		float fSlow14 = (fSlow13 - fSlow12);
+		float fSlow15 = std::max<float>((0.200000003f * std::fabs(fSlow12)), 0.100000001f);
+		float fSlow16 = (std::max<float>((0.200000003f * std::fabs(fSlow13)), 0.100000001f) - fSlow15);
 		for (int i0 = 0; (i0 < count); i0 = (i0 + 1)) {
 			float fTemp0 = float(input0[i0]);
-			fRec0[0] = (fSlow0 + (0.999499977f * fRec0[1]));
-			fRec1[0] = (fSlow1 + (0.999000013f * fRec1[1]));
-			float fTemp1 = ((fRec1[0] >= 1.0f) ? 0.0f : (0.5f * (1.0f - fRec1[0])));
-			float fTemp2 = (fTemp1 + (fRec0[0] + fRec1[0]));
-			float fTemp3 = (0.0f - (1.0f / fRec1[0]));
-			output0[i0] = FAUSTFLOAT((fTemp0 * std::sqrt(std::min<float>(std::max<float>(((fRec0[0] > 0.0f) ? ((fTemp3 * (fRec0[0] - fTemp1)) + 1.0f) : (fTemp2 / fRec1[0])), 0.0f), 1.0f))));
-			output1[i0] = FAUSTFLOAT((fTemp0 * std::sqrt(std::min<float>(std::max<float>(((fRec0[0] > 1.0f) ? ((fTemp3 * (fRec0[0] + (-1.0f - fTemp1))) + 1.0f) : ((fTemp2 + -1.0f) / fRec1[0])), 0.0f), 1.0f))));
-			output2[i0] = FAUSTFLOAT((fTemp0 * std::sqrt(std::min<float>(std::max<float>(((fRec0[0] > 2.0f) ? ((fTemp3 * (fRec0[0] + (-2.0f - fTemp1))) + 1.0f) : ((fTemp2 + -2.0f) / fRec1[0])), 0.0f), 1.0f))));
-			output3[i0] = FAUSTFLOAT((fTemp0 * std::sqrt(std::min<float>(std::max<float>(((fRec0[0] > 3.0f) ? ((fTemp3 * (fRec0[0] + (-3.0f - fTemp1))) + 1.0f) : ((fTemp2 + -3.0f) / fRec1[0])), 0.0f), 1.0f))));
-			fRec0[1] = fRec0[0];
+			float fTemp1 = std::fabs(fTemp0);
+			float fTemp2 = ((fRec1[1] > fTemp1) ? fSlow7 : fSlow4);
+			fRec2[0] = ((fRec2[1] * fTemp2) + (fTemp1 * (1.0f - fTemp2)));
+			fRec1[0] = fRec2[0];
+			fRec4[0] = std::max<float>(fTemp1, ((fRec4[1] * fSlow10) + (fTemp1 * fSlow11)));
+			fRec3[0] = ((0.999000013f * fRec3[1]) + (0.00100000005f * std::max<float>(fRec4[0], 0.00999999978f)));
+			fHbargraph0 = FAUSTFLOAT(fRec3[0]);
+			fHbargraph1 = FAUSTFLOAT(std::min<float>(std::max<float>((fRec1[0] / fHbargraph0), 0.0f), 1.0f));
+			float fTemp3 = pequed_faustpower2_f(fHbargraph1);
+			float fTemp4 = (fSlow0 + (fSlow1 * fTemp3));
+			float fTemp5 = std::tan((fConst1 * fTemp4));
+			float fTemp6 = (1.0f / fTemp5);
+			float fTemp7 = (fSlow12 + (fSlow14 * fTemp3));
+			int iTemp8 = (fTemp7 > 0.0f);
+			float fTemp9 = ((fSlow15 + (fSlow16 * fHbargraph1)) * std::sin((fConst3 * fTemp4)));
+			float fTemp10 = (fConst1 * ((fTemp4 * std::pow(10.0f, (0.0500000007f * std::fabs(fTemp7)))) / fTemp9));
+			float fTemp11 = (fConst1 * (fTemp4 / fTemp9));
+			float fTemp12 = (iTemp8 ? fTemp11 : fTemp10);
+			float fTemp13 = (2.0f * (fRec0[1] * (1.0f - (1.0f / pequed_faustpower2_f(fTemp5)))));
+			float fTemp14 = (((fTemp6 + fTemp12) / fTemp5) + 1.0f);
+			fRec0[0] = (fTemp0 - (((fRec0[2] * (((fTemp6 - fTemp12) / fTemp5) + 1.0f)) + fTemp13) / fTemp14));
+			float fTemp15 = (iTemp8 ? fTemp10 : fTemp11);
+			output0[i0] = FAUSTFLOAT((((fTemp13 + (fRec0[0] * (((fTemp6 + fTemp15) / fTemp5) + 1.0f))) + (fRec0[2] * (((fTemp6 - fTemp15) / fTemp5) + 1.0f))) / fTemp14));
+			fRec2[1] = fRec2[0];
 			fRec1[1] = fRec1[0];
+			fRec4[1] = fRec4[0];
+			fRec3[1] = fRec3[0];
+			fRec0[2] = fRec0[1];
+			fRec0[1] = fRec0[0];
 		}
 	}
 
@@ -748,7 +865,7 @@ class splits : public dsp {
 #endif
 
 #ifndef PLUGIN_URI
-#define PLUGIN_URI URI_PREFIX "/splits"
+#define PLUGIN_URI URI_PREFIX "/pequed"
 #endif
 
 #define MIDI_EVENT_URI "http://lv2plug.in/ns/ext/midi#MidiEvent"
@@ -989,7 +1106,7 @@ struct LV2Plugin {
   int rate;		// sampling rate
   int nvoices;		// current number of voices (<= maxvoices)
   int tuning_no;	// current tuning number (<= n_tunings)
-  splits **dsp;		// the dsps
+  pequed **dsp;		// the dsps
   LV2UI **ui;		// their Faust interface descriptions
   int n_in, n_out;	// number of input and output control ports
   int *ctrls;		// Faust ui elements (indices into ui->elems)
@@ -1028,7 +1145,7 @@ struct LV2Plugin {
       // stack space is precious (e.g., Reaper). Note that if any of these
       // allocations fail then no meta data will be available, but at least we
       // won't make the host crash and burn.
-      splits* tmp_dsp = new splits();
+      pequed* tmp_dsp = new pequed();
       if (tmp_dsp) {
 	tmp_dsp->metadata(meta);
 	delete tmp_dsp;
@@ -1043,7 +1160,7 @@ struct LV2Plugin {
 
   static const char *pluginName()
   {
-    return meta_get("name", "splits");
+    return meta_get("name", "pequed");
   }
 
   static const char *pluginAuthor()
@@ -1139,7 +1256,7 @@ struct LV2Plugin {
     if (num_voices>0) load_sysex_data();
 #endif
     // Allocate data structures and set some reasonable defaults.
-    dsp = (splits**)calloc(ndsps, sizeof(splits*));
+    dsp = (pequed**)calloc(ndsps, sizeof(pequed*));
     ui = (LV2UI**)calloc(ndsps, sizeof(LV2UI*));
     assert(dsp && ui);
     if (vd) {
@@ -1180,7 +1297,7 @@ struct LV2Plugin {
     memset(midivals, 0, sizeof(midivals));
     // Initialize the Faust DSPs.
     for (int i = 0; i < ndsps; i++) {
-      dsp[i] = new splits();
+      dsp[i] = new pequed();
       ui[i] = new LV2UI(num_voices);
       dsp[i]->init(rate);
       dsp[i]->buildUserInterface(ui[i]);
@@ -2271,7 +2388,7 @@ int lv2_dyn_manifest_get_data(LV2_Dyn_Manifest_Handle handle,
   plugin_version = plugin->pluginVersion();
   plugin_license = plugin->pluginLicense();
 #endif
-  if (!plugin_name || !*plugin_name) plugin_name = "splits";
+  if (!plugin_name || !*plugin_name) plugin_name = "pequed";
   fprintf(fp, "@prefix doap:  <http://usefulinc.com/ns/doap#> .\n\
 @prefix foaf:  <http://xmlns.com/foaf/0.1/> .\n\
 @prefix lv2:   <http://lv2plug.in/ns/lv2core#> .\n\
@@ -2285,7 +2402,7 @@ int lv2_dyn_manifest_get_data(LV2_Dyn_Manifest_Handle handle,
 <%s>\n\
        a lv2:Plugin%s ;\n\
        doap:name \"%s\" ;\n\
-       lv2:binary <splits%s> ;\n\
+       lv2:binary <pequed%s> ;\n\
        lv2:requiredFeature urid:map ;\n\
        lv2:optionalFeature epp:supportsStrictBounds ;\n\
        lv2:optionalFeature lv2:hardRTCapable ;\n", PLUGIN_URI,
