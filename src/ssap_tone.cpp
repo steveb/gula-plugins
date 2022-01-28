@@ -4,8 +4,8 @@ copyright: "Steve Baker (2020)"
 license: "GPLv3"
 name: "SSaP Tone"
 version: "1.0.0"
-Code generated with Faust 2.22.5 (https://faust.grame.fr)
-Compilation options: -lang cpp -scal -ftz 0
+Code generated with Faust 2.32.16 (https://faust.grame.fr)
+Compilation options: -a /usr/local/share/faust/lv2.cpp -lang cpp -es 1 -single -ftz 0
 ------------------------------------------------------------ */
 
 #ifndef  __ssap_tone_H__
@@ -117,13 +117,13 @@ class dsp {
     
         /**
          * Trigger the ui_interface parameter with instance specific calls
-         * to 'addBtton', 'addVerticalSlider'... in order to build the UI.
+         * to 'openTabBox', 'addButton', 'addVerticalSlider'... in order to build the UI.
          *
          * @param ui_interface - the user interface builder
          */
         virtual void buildUserInterface(UI* ui_interface) = 0;
     
-        /* Returns the sample rate currently used by the instance */
+        /* Return the sample rate currently used by the instance */
         virtual int getSampleRate() = 0;
     
         /**
@@ -131,28 +131,28 @@ class dsp {
          * - static class 'classInit': static tables initialization
          * - 'instanceInit': constants and instance state initialization
          *
-         * @param sample_rate - the sampling rate in Hertz
+         * @param sample_rate - the sampling rate in Hz
          */
         virtual void init(int sample_rate) = 0;
 
         /**
          * Init instance state
          *
-         * @param sample_rate - the sampling rate in Hertz
+         * @param sample_rate - the sampling rate in Hz
          */
         virtual void instanceInit(int sample_rate) = 0;
-
+    
         /**
          * Init instance constant state
          *
-         * @param sample_rate - the sampling rate in Hertz
+         * @param sample_rate - the sampling rate in Hz
          */
         virtual void instanceConstants(int sample_rate) = 0;
     
         /* Init default control parameters values */
         virtual void instanceResetUserInterface() = 0;
     
-        /* Init instance state (delay lines...) */
+        /* Init instance state (like delay lines...) but keep the control parameter values */
         virtual void instanceClear() = 0;
  
         /**
@@ -225,7 +225,8 @@ class decorator_dsp : public dsp {
 };
 
 /**
- * DSP factory class.
+ * DSP factory class, used with LLVM and Interpreter backends
+ * to create DSP instances from a compiled DSP program.
  */
 
 class dsp_factory {
@@ -268,7 +269,7 @@ class dsp_factory {
 #endif
 
 #endif
-/**************************  END  dsp.h **************************/
+/************************** END dsp.h **************************/
 /************************** BEGIN UI.h **************************/
 /************************************************************************
  FAUST Architecture File
@@ -342,6 +343,9 @@ struct UIReal
     // -- metadata declarations
     
     virtual void declare(REAL* zone, const char* key, const char* val) {}
+    
+    // To be used by LLVM client
+    virtual int sizeOfFAUSTFLOAT() { return sizeof(FAUSTFLOAT); }
 };
 
 struct UI : public UIReal<FAUSTFLOAT>
@@ -598,6 +602,7 @@ void LV2UI::run() {}
 
 #include <algorithm>
 #include <cmath>
+#include <cstdint>
 #include <math.h>
 
 static float ssap_tone_faustpower2_f(float value) {
@@ -618,7 +623,6 @@ class ssap_tone : public dsp {
  private:
 	
 	int fSampleRate;
-	float fConst0;
 	float fConst1;
 	FAUSTFLOAT fHslider0;
 	float fRec0[2];
@@ -647,10 +651,11 @@ class ssap_tone : public dsp {
 	
 	void metadata(Meta* m) { 
 		m->declare("analyzers.lib/name", "Faust Analyzer Library");
-		m->declare("analyzers.lib/version", "0.0");
+		m->declare("analyzers.lib/version", "0.1");
 		m->declare("author", "Gula Plugins");
 		m->declare("basics.lib/name", "Faust Basic Element Library");
 		m->declare("basics.lib/version", "0.1");
+		m->declare("compile_options", "-a /usr/local/share/faust/lv2.cpp -lang cpp -es 1 -single -ftz 0");
 		m->declare("copyright", "Steve Baker (2020)");
 		m->declare("description", "Tone shaping with a low shelf, a high shelf and a parametric EQ, all on the same frequency");
 		m->declare("filename", "ssap_tone.dsp");
@@ -695,12 +700,13 @@ class ssap_tone : public dsp {
 		m->declare("filters.lib/tf2s:author", "Julius O. Smith III");
 		m->declare("filters.lib/tf2s:copyright", "Copyright (C) 2003-2019 by Julius O. Smith III <jos@ccrma.stanford.edu>");
 		m->declare("filters.lib/tf2s:license", "MIT-style STK-4.3 license");
+		m->declare("filters.lib/version", "0.3");
 		m->declare("license", "GPLv3");
 		m->declare("maths.lib/author", "GRAME");
 		m->declare("maths.lib/copyright", "GRAME");
 		m->declare("maths.lib/license", "LGPL with exception");
 		m->declare("maths.lib/name", "Faust Math Library");
-		m->declare("maths.lib/version", "2.2");
+		m->declare("maths.lib/version", "2.3");
 		m->declare("name", "SSaP Tone");
 		m->declare("platform.lib/name", "Generic Platform Library");
 		m->declare("platform.lib/version", "0.1");
@@ -715,41 +721,13 @@ class ssap_tone : public dsp {
 	virtual int getNumOutputs() {
 		return 1;
 	}
-	virtual int getInputRate(int channel) {
-		int rate;
-		switch ((channel)) {
-			case 0: {
-				rate = 1;
-				break;
-			}
-			default: {
-				rate = -1;
-				break;
-			}
-		}
-		return rate;
-	}
-	virtual int getOutputRate(int channel) {
-		int rate;
-		switch ((channel)) {
-			case 0: {
-				rate = 1;
-				break;
-			}
-			default: {
-				rate = -1;
-				break;
-			}
-		}
-		return rate;
-	}
 	
 	static void classInit(int sample_rate) {
 	}
 	
 	virtual void instanceConstants(int sample_rate) {
 		fSampleRate = sample_rate;
-		fConst0 = std::min<float>(192000.0f, std::max<float>(1.0f, float(fSampleRate)));
+		float fConst0 = std::min<float>(192000.0f, std::max<float>(1.0f, float(fSampleRate)));
 		fConst1 = (3.14159274f / fConst0);
 		fConst2 = (6.28318548f / fConst0);
 	}
@@ -863,7 +841,7 @@ class ssap_tone : public dsp {
 		float fSlow2 = (0.00100000005f * float(fHslider2));
 		float fSlow3 = (0.00100000005f * float(fHslider3));
 		float fSlow4 = (0.00100000005f * float(fHslider4));
-		for (int i = 0; (i < count); i = (i + 1)) {
+		for (int i0 = 0; (i0 < count); i0 = (i0 + 1)) {
 			fRec0[0] = (fSlow0 + (0.995000005f * fRec0[1]));
 			float fTemp0 = std::tan((fConst1 * fRec0[0]));
 			float fTemp1 = ssap_tone_faustpower2_f(fTemp0);
@@ -872,7 +850,7 @@ class ssap_tone : public dsp {
 			float fTemp4 = (1.0f / fTemp0);
 			float fTemp5 = (fTemp4 + 1.0f);
 			float fTemp6 = (0.0f - (1.0f / (fTemp0 * fTemp5)));
-			float fTemp7 = float(input0[i]);
+			float fTemp7 = float(input0[i0]);
 			fVec0[0] = fTemp7;
 			float fTemp8 = (1.0f - fTemp4);
 			fRec5[0] = ((fVec0[1] * fTemp6) - (((fTemp8 * fRec5[1]) - (fTemp7 / fTemp0)) / fTemp5));
@@ -901,7 +879,7 @@ class ssap_tone : public dsp {
 			float fTemp19 = (((fTemp4 + fTemp17) / fTemp0) + 1.0f);
 			fRec1[0] = (((((((fTemp3 * fRec2[1]) + (fRec2[0] / fTemp1)) + (fRec2[2] / fTemp1)) * std::pow(10.0f, (0.0500000007f * fRec9[0]))) + (fRec10[2] + (fRec10[0] + (2.0f * fRec10[1])))) / fTemp10) - (((fRec1[2] * (((fTemp4 - fTemp17) / fTemp0) + 1.0f)) + fTemp18) / fTemp19));
 			float fTemp20 = (iTemp13 ? fTemp15 : fTemp16);
-			output0[i] = FAUSTFLOAT((((fTemp18 + (fRec1[0] * (((fTemp4 + fTemp20) / fTemp0) + 1.0f))) + (fRec1[2] * (((fTemp4 - fTemp20) / fTemp0) + 1.0f))) / fTemp19));
+			output0[i0] = FAUSTFLOAT((((fTemp18 + (fRec1[0] * (((fTemp4 + fTemp20) / fTemp0) + 1.0f))) + (fRec1[2] * (((fTemp4 - fTemp20) / fTemp0) + 1.0f))) / fTemp19));
 			fRec0[1] = fRec0[0];
 			fVec0[1] = fVec0[0];
 			fRec5[1] = fRec5[0];
@@ -2489,12 +2467,14 @@ int lv2_dyn_manifest_get_data(LV2_Dyn_Manifest_Handle handle,
 @prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n\
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .\n\
 @prefix units: <http://lv2plug.in/ns/extensions/units#> .\n\
+@prefix urid:  <http://lv2plug.in/ns/ext/urid#> .\n\
 <%s>\n\
        a lv2:Plugin%s ;\n\
        doap:name \"%s\" ;\n\
        lv2:binary <ssap_tone%s> ;\n\
+       lv2:requiredFeature urid:map ;\n\
        lv2:optionalFeature epp:supportsStrictBounds ;\n\
-       lv2:optionalFeature lv2:hardRtCapable ;\n", PLUGIN_URI,
+       lv2:optionalFeature lv2:hardRTCapable ;\n", PLUGIN_URI,
 	  is_instr?", lv2:InstrumentPlugin":"",
 	  plugin_name, DLLEXT);
   if (plugin_author && *plugin_author)

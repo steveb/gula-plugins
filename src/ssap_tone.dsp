@@ -6,7 +6,6 @@ declare license "GPLv3";
 declare description "Tone shaping with a low shelf, a high shelf and a parametric EQ, all on the same frequency";
 
 import("gula.lib");
-si = library("signals.lib");
 
 freq_raw = hslider("[1]freq[name:Freq][tooltip:frequency (Hz)]", 900, 200, 2000, 10);
 bass_raw = hslider("[2]bass[name:Bass][unit:dB]", 0, -20, 20, 0.1);
