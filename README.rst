@@ -63,7 +63,32 @@ This is an attempt at replacing the classic amp tone stack using digital filter 
 The bass and treble controls are shelf filters which can raise or lower by 20dB. The midrange
 is a parametric EQ which includes its own Q value. The frequency for all three filters is determined
 by a single frequency value. The result is a pedal flexible enough to do subtle tone shaping, wah effects,
-, strong midrange scoops, or midrange boosts.
+strong midrange scoops, or midrange boosts.
+
+Sweabed
+=======
+Midrange parametic EQ with A and B settings which can be swept between with a single control
+
+Parametric EQ values for A and B are set independently, and the AB Sweep control
+interpolates between them. Instead of having an independent Q value, there is a
+proportional Q which raises with the absolute gain.
+
+This can be used to create wah-like effects, or other effects sweeping
+broad/narrow boosts/cuts.
+
+Pequed
+======
+Midrange parametic EQ with high and low values interpolated based on the peak amplitude of the input
+
+Parametric EQ values for A and B are set independently, and the amplitude of the input
+interpolates between them. Instead of having an independent Q value, there is a
+proportional Q which raises with the absolute gain.
+
+Attack and Release determine how fast the interpolated index can change.
+
+The 'LO' values are the interpolation point for silent input. The 'HI' values are the interpolation point
+for the most recent peak amplitude. This peak amplitude decays at a rate 10 times the Release value. This allows
+full interpolation to be possible for an input which varies in amplitude over time.
 
 .. _Faust installation: https://faust.grame.fr/doc/manual/index.html#compiling-and-installing-the-faust-compiler
 .. _MOD Devices: https://www.moddevices.com/

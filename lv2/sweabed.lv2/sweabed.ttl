@@ -16,7 +16,16 @@
        lv2:optionalFeature epp:supportsStrictBounds ;
        lv2:optionalFeature lv2:hardRTCapable ;
        doap:maintainer [ foaf:name "GULA" ] ;
-       rdfs:comment "Midrange parametic EQ with A and B settings which can be swept between with a single control" ;
+       rdfs:comment """
+Midrange parametic EQ with A and B settings which can be swept between with a single control
+
+Parametric EQ values for A and B are set independently, and the AB Sweep control
+interpolates between them. Instead of having an independent Q value, there is a
+proportional Q which raises with the absolute gain.
+
+This can be used to create wah-like effects, or other effects sweeping
+broad/narrow boosts/cuts.
+""" ;
        doap:revision "1.0.0" ;
        doap:license "GPLv3" ;
     lv2:port [

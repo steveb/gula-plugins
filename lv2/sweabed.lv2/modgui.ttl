@@ -4,10 +4,10 @@
 <https://github.com/steveb/gula-plugins/sweabed>
     modgui:gui [
         modgui:resourcesDirectory <modgui> ;
-        modgui:iconTemplate <modgui/icon-ab-sweep.html> ;
-        modgui:stylesheet <modgui/stylesheet-ab-sweep.css> ;
-        modgui:screenshot <modgui/screenshot-ab-sweep.png> ;
-        modgui:thumbnail <modgui/thumbnail-ab-sweep.png> ;
+        modgui:iconTemplate <modgui/icon-sweabed.html> ;
+        modgui:stylesheet <modgui/stylesheet-sweabed.css> ;
+        modgui:screenshot <modgui/screenshot-sweabed.png> ;
+        modgui:thumbnail <modgui/thumbnail-sweabed.png> ;
         modgui:brand "GULA" ;
         modgui:label "Sweabed" ;
         modgui:model "boxy" ;
