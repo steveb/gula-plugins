@@ -12,4 +12,4 @@ attack = hslider("[01]attack[unit:s][name: Attack]", 0.01, 0, 0.5, 0.01);
 release = hslider("[02]release[unit:s][name: Release]", 0.5, 0, 2, 0.01);
 peak_decay = hslider("[03]peak_decay[unit:s][name: Peak Decay]", 5, 0, 30, 0.1);
 
-process = _ : gula_ab_amp(attack, release, peak_decay) : _ ;
+process = _ : gula_ab_amp(attack, release, peak_decay) * 10 : _ ;

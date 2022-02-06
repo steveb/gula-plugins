@@ -2,7 +2,7 @@
 author: "GULA"
 copyright: "Steve Baker (2022)"
 license: "GPLv3"
-name: "Pequed"
+name: "Peak audio to CV"
 version: "1.0.0"
 Code generated with Faust 2.32.16 (https://faust.grame.fr)
 Compilation options: -a /usr/local/share/faust/lv2.cpp -lang cpp -es 1 -single -ftz 0
@@ -649,7 +649,7 @@ class peak_audio_to_cv : public dsp {
 		m->declare("maths.lib/license", "LGPL with exception");
 		m->declare("maths.lib/name", "Faust Math Library");
 		m->declare("maths.lib/version", "2.3");
-		m->declare("name", "Pequed");
+		m->declare("name", "Peak audio to CV");
 		m->declare("platform.lib/name", "Generic Platform Library");
 		m->declare("platform.lib/version", "0.1");
 		m->declare("signals.lib/name", "Faust Signal Routing Library");
@@ -712,7 +712,7 @@ class peak_audio_to_cv : public dsp {
 	}
 	
 	virtual void buildUserInterface(UI* ui_interface) {
-		ui_interface->openVerticalBox("Pequed");
+		ui_interface->openVerticalBox("Peak audio to CV");
 		ui_interface->declare(&fHslider0, "01", "");
 		ui_interface->declare(&fHslider0, "name", "Attack");
 		ui_interface->declare(&fHslider0, "unit", "s");
@@ -752,7 +752,7 @@ class peak_audio_to_cv : public dsp {
 			fRec2[0] = ((0.999000013f * fRec2[1]) + (0.00100000005f * std::max<float>(fRec3[0], 0.00999999978f)));
 			fHbargraph0 = FAUSTFLOAT(fRec2[0]);
 			fHbargraph1 = FAUSTFLOAT(std::min<float>(std::max<float>((fRec0[0] / fHbargraph0), 0.0f), 1.0f));
-			output0[i0] = FAUSTFLOAT(fHbargraph1);
+			output0[i0] = FAUSTFLOAT((10.0f * fHbargraph1));
 			fRec1[1] = fRec1[0];
 			fRec0[1] = fRec0[0];
 			fRec3[1] = fRec3[0];
