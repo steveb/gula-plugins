@@ -90,5 +90,12 @@ The 'LO' values are the interpolation point for silent input. The 'HI' values ar
 for the most recent peak amplitude. This peak amplitude decays at a rate 10 times the Release value. This allows
 full interpolation to be possible for an input which varies in amplitude over time.
 
+Peak audio to CV
+================
+CV output value derived from the amplitude of the input, with auto-detection of the peak aplitude
+
+Attack and Release determine how fast the output value changes. The Peak Decay determines how quickly the
+detected peak value decays back to zero.
+
 .. _Faust installation: https://faust.grame.fr/doc/manual/index.html#compiling-and-installing-the-faust-compiler
 .. _MOD Devices: https://www.moddevices.com/

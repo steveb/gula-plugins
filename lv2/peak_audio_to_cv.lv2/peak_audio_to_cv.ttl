@@ -17,7 +17,12 @@
        lv2:optionalFeature epp:supportsStrictBounds ;
        lv2:optionalFeature lv2:hardRTCapable ;
        doap:maintainer [ foaf:name "GULA" ] ;
-       rdfs:comment "CV output value derived from the amplitude of the input, with auto-detection of the peak aplitude" ;
+       rdfs:comment """
+CV output value derived from the amplitude of the input, with auto-detection of the peak aplitude
+
+Attack and Release determine how fast the output value changes. The Peak Decay determines how quickly the
+detected peak value decays back to zero.
+""" ;
        doap:revision "1.0.0" ;
        doap:license "GPLv3" ;
     lv2:port [
