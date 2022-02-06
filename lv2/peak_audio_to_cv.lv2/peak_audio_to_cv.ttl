@@ -1,0 +1,104 @@
+@prefix doap:  <http://usefulinc.com/ns/doap#> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix lv2:   <http://lv2plug.in/ns/lv2core#> .
+@prefix ui:    <http://lv2plug.in/ns/extensions/ui#> .
+@prefix epp:   <http://lv2plug.in/ns/ext/port-props#> .
+@prefix atom:  <http://lv2plug.in/ns/ext/atom#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix units: <http://lv2plug.in/ns/extensions/units#> .
+@prefix urid:  <http://lv2plug.in/ns/ext/urid#> .
+@prefix mod: <http://moddevices.com/ns/mod#>.
+<https://github.com/steveb/gula-plugins/peak_audio_to_cv>
+       a lv2:Plugin, mod:ControlVoltagePlugin ;
+       doap:name "Peak audio to CV" ;
+       lv2:binary <peak_audio_to_cv.so> ;
+       lv2:requiredFeature urid:map ;
+       lv2:optionalFeature epp:supportsStrictBounds ;
+       lv2:optionalFeature lv2:hardRTCapable ;
+       doap:maintainer [ foaf:name "GULA" ] ;
+       rdfs:comment "CV output value derived from the amplitude of the input, with auto-detection of the peak aplitude" ;
+       doap:revision "1.0.0" ;
+       doap:license "GPLv3" ;
+    lv2:port [
+	a lv2:InputPort ;
+	a lv2:ControlPort ;
+	lv2:index 0 ;
+	lv2:symbol "attack_0" ;
+	lv2:name "attack" ;
+        lv2:portProperty epp:hasStrictBounds ;
+        epp:rangeSteps 50 ;
+	lv2:default 0.01 ;
+	lv2:minimum 0 ;
+	lv2:maximum 0.5 ;
+	units:unit [
+            a            units:Unit ;
+            units:name   "s" ;
+            units:symbol "s" ;
+            units:render "%f s"
+	] ;
+    ] , [
+	a lv2:InputPort ;
+	a lv2:ControlPort ;
+	lv2:index 1 ;
+	lv2:symbol "release_1" ;
+	lv2:name "release" ;
+        lv2:portProperty epp:hasStrictBounds ;
+        epp:rangeSteps 200 ;
+	lv2:default 0.5 ;
+	lv2:minimum 0 ;
+	lv2:maximum 2 ;
+	units:unit [
+            a            units:Unit ;
+            units:name   "s" ;
+            units:symbol "s" ;
+            units:render "%f s"
+	] ;
+    ] , [
+	a lv2:InputPort ;
+	a lv2:ControlPort ;
+	lv2:index 2 ;
+	lv2:symbol "peak_decay_2" ;
+	lv2:name "peak_decay" ;
+        lv2:portProperty epp:hasStrictBounds ;
+        epp:rangeSteps 300 ;
+	lv2:default 5 ;
+	lv2:minimum 0 ;
+	lv2:maximum 30 ;
+	units:unit [
+            a            units:Unit ;
+            units:name   "s" ;
+            units:symbol "s" ;
+            units:render "%f s"
+	] ;
+    ] , [
+	a lv2:OutputPort ;
+	a lv2:ControlPort ;
+	lv2:index 3 ;
+	lv2:symbol "range_3" ;
+	lv2:name "range" ;
+	lv2:default 0 ;
+	lv2:minimum 0 ;
+	lv2:maximum 1 ;
+    ] , [
+	a lv2:OutputPort ;
+	a lv2:ControlPort ;
+	lv2:index 4 ;
+	lv2:symbol "sweep_4" ;
+	lv2:name "sweep" ;
+	lv2:default 0 ;
+	lv2:minimum 0 ;
+	lv2:maximum 1 ;
+    ] , [
+	a lv2:InputPort ;
+	a lv2:AudioPort ;
+	lv2:index 5 ;
+	lv2:symbol "in0" ;
+	lv2:name "in0" ;
+    ] , [
+    a lv2:OutputPort, lv2:CVPort, mod:CVPort;
+	lv2:index 6 ;
+	lv2:symbol "CVout" ;
+	lv2:name "CV Output" ;
+    ]
+.
