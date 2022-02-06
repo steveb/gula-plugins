@@ -1,0 +1,101 @@
+@prefix doap:  <http://usefulinc.com/ns/doap#> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix lv2:   <http://lv2plug.in/ns/lv2core#> .
+@prefix ui:    <http://lv2plug.in/ns/extensions/ui#> .
+@prefix epp:   <http://lv2plug.in/ns/ext/port-props#> .
+@prefix atom:  <http://lv2plug.in/ns/ext/atom#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix units: <http://lv2plug.in/ns/extensions/units#> .
+@prefix urid:  <http://lv2plug.in/ns/ext/urid#> .
+@prefix mod: <http://moddevices.com/ns/mod#>.
+<https://github.com/steveb/gula-plugins/lfo_cv>
+       a lv2:Plugin, mod:ControlVoltagePlugin ;
+       doap:name "LFO CV" ;
+       lv2:binary <lfo_cv.so> ;
+       lv2:requiredFeature urid:map ;
+       lv2:optionalFeature epp:supportsStrictBounds ;
+       lv2:optionalFeature lv2:hardRTCapable ;
+       doap:maintainer [ foaf:name "Gula Plugins" ] ;
+       rdfs:comment "A CV output of an LFO with multiple shape modes and shapes" ;
+       doap:revision "1.0.0" ;
+       doap:license "GPLv3" ;
+    lv2:port [
+	a lv2:InputPort ;
+	a lv2:ControlPort ;
+	lv2:index 0 ;
+	lv2:symbol "shape_mode_0" ;
+	lv2:name "shape_mode" ;
+    lv2:portProperty epp:hasStrictBounds ;
+	lv2:portProperty lv2:enumeration;
+	epp:rangeSteps 3 ;
+	lv2:default 1 ;
+	lv2:minimum 0 ;
+	lv2:maximum 3 ;
+	lv2:scalePoint [ rdfs:label "Random -> Sine"; rdf:value 0 ] ;
+	lv2:scalePoint [ rdfs:label "Sine -> Square"; rdf:value 1 ] ;
+	lv2:scalePoint [ rdfs:label "Impulse -> Square -> Pulse"; rdf:value 2 ] ;
+	lv2:scalePoint [ rdfs:label "Saw (asc) -> Tri -> Saw (desc)"; rdf:value 3 ] ;
+    ] , [
+	a lv2:InputPort ;
+	a lv2:ControlPort ;
+	lv2:index 1 ;
+	lv2:symbol "rate_1" ;
+	lv2:name "rate" ;
+        lv2:portProperty epp:hasStrictBounds ;
+        epp:rangeSteps 960 ;
+	lv2:default 4 ;
+	lv2:minimum 0.4 ;
+	lv2:maximum 10 ;
+    ] , [
+	a lv2:InputPort ;
+	a lv2:ControlPort ;
+	lv2:index 2 ;
+	lv2:symbol "amplitude_2" ;
+	lv2:name "amplitude" ;
+        lv2:portProperty epp:hasStrictBounds ;
+        epp:rangeSteps 100 ;
+	lv2:default 10 ;
+	lv2:minimum 0 ;
+	lv2:maximum 10 ;
+    ] , [
+	a lv2:InputPort ;
+	a lv2:ControlPort ;
+	lv2:index 3 ;
+	lv2:symbol "offset_3" ;
+	lv2:name "offset" ;
+        lv2:portProperty epp:hasStrictBounds ;
+        epp:rangeSteps 100 ;
+	lv2:default 0 ;
+	lv2:minimum -5 ;
+	lv2:maximum 5 ;
+    ] , [
+	a lv2:InputPort ;
+	a lv2:ControlPort ;
+	lv2:index 4 ;
+	lv2:symbol "shape_4" ;
+	lv2:name "shape" ;
+        lv2:portProperty epp:hasStrictBounds ;
+        epp:rangeSteps 100 ;
+	lv2:default 0 ;
+	lv2:minimum 0 ;
+	lv2:maximum 1 ;
+    ] , [
+	a lv2:OutputPort ;
+	a lv2:ControlPort ;
+	lv2:index 5 ;
+	lv2:symbol "lfo_out_5" ;
+	lv2:name "lfo_out" ;
+	lv2:default 0 ;
+	lv2:minimum -10 ;
+	lv2:maximum 10 ;
+    ] , [
+    a lv2:OutputPort, lv2:CVPort, mod:CVPort;
+	lv2:index 6 ;
+	lv2:symbol "CVout" ;
+	lv2:name "CV Output" ;
+	lv2:default 0 ;
+	lv2:minimum -10 ;
+	lv2:maximum 10 ;
+    ]
+.
