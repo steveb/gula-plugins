@@ -645,9 +645,6 @@ class lfo_cvSIG0 {
 static lfo_cvSIG0* newlfo_cvSIG0() { return (lfo_cvSIG0*)new lfo_cvSIG0(); }
 static void deletelfo_cvSIG0(lfo_cvSIG0* dsp) { delete dsp; }
 
-static float lfo_cv_faustpower2_f(float value) {
-	return (value * value);
-}
 static float ftbl0lfo_cvSIG0[65536];
 
 #ifndef FAUSTCLASS 
@@ -755,10 +752,10 @@ class lfo_cv : public dsp {
 	}
 	
 	virtual void instanceResetUserInterface() {
-		fHslider0 = FAUSTFLOAT(0.0f);
-		fHslider1 = FAUSTFLOAT(10.0f);
-		fHslider2 = FAUSTFLOAT(0.0f);
-		fHslider3 = FAUSTFLOAT(1.0f);
+		fHslider0 = FAUSTFLOAT(10.0f);
+		fHslider1 = FAUSTFLOAT(0.0f);
+		fHslider2 = FAUSTFLOAT(1.0f);
+		fHslider3 = FAUSTFLOAT(0.0f);
 		fHslider4 = FAUSTFLOAT(4.0f);
 	}
 	
@@ -827,77 +824,76 @@ class lfo_cv : public dsp {
 		ui_interface->declare(&fHslider3, "01", "");
 		ui_interface->declare(&fHslider3, "name", "Shape Mode");
 		ui_interface->declare(&fHslider3, "style", "menu{'Random -> Sine': 0; 'Sine -> Square': 1; 'Impulse -> Square -> Pulse': 2; 'Saw (asc) -> Tri -> Saw (desc)': 3}");
-		ui_interface->addHorizontalSlider("shape_mode", &fHslider3, 1.0f, 0.0f, 3.0f, 1.0f);
+		ui_interface->addHorizontalSlider("shape_mode", &fHslider3, 0.0f, 0.0f, 3.0f, 1.0f);
 		ui_interface->declare(&fHslider4, "02", "");
 		ui_interface->declare(&fHslider4, "log", "");
 		ui_interface->declare(&fHslider4, "name", "Rate");
 		ui_interface->declare(&fHslider4, "tooltip", "Frequency of oscillator");
 		ui_interface->addHorizontalSlider("rate", &fHslider4, 4.0f, 0.400000006f, 10.0f, 0.00999999978f);
-		ui_interface->declare(&fHslider1, "03", "");
-		ui_interface->declare(&fHslider1, "name", "Amplitude");
-		ui_interface->declare(&fHslider1, "tooltip", "Amplitude of signal");
-		ui_interface->addHorizontalSlider("amplitude", &fHslider1, 10.0f, 0.0f, 10.0f, 0.100000001f);
-		ui_interface->declare(&fHslider0, "04", "");
-		ui_interface->declare(&fHslider0, "name", "Offset");
-		ui_interface->declare(&fHslider0, "tooltip", "Offset of signal");
-		ui_interface->addHorizontalSlider("offset", &fHslider0, 0.0f, -5.0f, 5.0f, 0.100000001f);
+		ui_interface->declare(&fHslider0, "03", "");
+		ui_interface->declare(&fHslider0, "name", "Amplitude");
+		ui_interface->declare(&fHslider0, "tooltip", "Amplitude of signal");
+		ui_interface->addHorizontalSlider("amplitude", &fHslider0, 10.0f, 0.0f, 10.0f, 0.100000001f);
+		ui_interface->declare(&fHslider1, "04", "");
+		ui_interface->declare(&fHslider1, "name", "Offset");
+		ui_interface->declare(&fHslider1, "tooltip", "Offset of signal");
+		ui_interface->addHorizontalSlider("offset", &fHslider1, 0.0f, -5.0f, 5.0f, 0.100000001f);
 		ui_interface->declare(&fHslider2, "05", "");
 		ui_interface->declare(&fHslider2, "name", "Shape");
 		ui_interface->declare(&fHslider2, "tooltip", "Wave shape for mode");
-		ui_interface->addHorizontalSlider("shape", &fHslider2, 0.0f, 0.0f, 1.0f, 0.00999999978f);
+		ui_interface->addHorizontalSlider("shape", &fHslider2, 1.0f, 0.0f, 1.0f, 0.00999999978f);
 		ui_interface->addHorizontalBargraph("lfo_out", &fHbargraph0, -10.0f, 10.0f);
 		ui_interface->closeBox();
 	}
 	
 	virtual void compute(int count, FAUSTFLOAT** inputs, FAUSTFLOAT** outputs) {
 		FAUSTFLOAT* output0 = outputs[0];
-		float fSlow0 = lfo_cv_faustpower2_f((1.0f - float(fHslider1)));
-		float fSlow1 = (float(fHslider0) + fSlow0);
-		float fSlow2 = (1.0f - fSlow0);
-		float fSlow3 = (std::min<float>(float(fHslider2), 0.99000001f) + float(fHslider3));
-		int iSlow4 = int(fSlow3);
-		int iSlow5 = (iSlow4 >= 3);
-		int iSlow6 = (iSlow4 >= 2);
-		int iSlow7 = (iSlow4 >= 1);
-		float fSlow8 = std::floor(fSlow3);
-		float fSlow9 = (fSlow8 + (1.0f - fSlow3));
-		float fSlow10 = float(fHslider4);
-		float fSlow11 = (1.0f / std::tan((fConst1 * fSlow10)));
-		float fSlow12 = (1.0f / (fSlow11 + 1.0f));
-		float fSlow13 = (1.0f - fSlow11);
-		float fSlow14 = (fConst2 * fSlow10);
-		float fSlow15 = std::sin(fSlow14);
-		float fSlow16 = std::cos(fSlow14);
-		float fSlow17 = (fSlow3 - fSlow8);
-		float fSlow18 = (0.5f * fSlow17);
-		float fSlow19 = (fConst3 * fSlow10);
-		float fSlow20 = (0.5f * fSlow9);
-		int iSlow21 = int((fConst0 / fSlow10));
-		float fSlow22 = float(iSlow21);
-		int iSlow23 = int((fSlow22 * ((iSlow4 == 1) ? 0.5f : fSlow9)));
-		int iSlow24 = (iSlow4 >= 4);
-		int iSlow25 = int((fSlow9 * fSlow22));
-		float fSlow26 = float((iSlow21 - iSlow25));
-		float fSlow27 = (1.0f / fSlow26);
-		float fSlow28 = (1.0f / float(iSlow25));
+		float fSlow0 = float(fHslider0);
+		float fSlow1 = (0.100000001f * float(fHslider1));
+		float fSlow2 = (std::min<float>(float(fHslider2), 0.99000001f) + float(fHslider3));
+		int iSlow3 = int(fSlow2);
+		int iSlow4 = (iSlow3 >= 3);
+		int iSlow5 = (iSlow3 >= 2);
+		int iSlow6 = (iSlow3 >= 1);
+		float fSlow7 = std::floor(fSlow2);
+		float fSlow8 = (fSlow7 + (1.0f - fSlow2));
+		float fSlow9 = float(fHslider4);
+		float fSlow10 = (1.0f / std::tan((fConst1 * fSlow9)));
+		float fSlow11 = (1.0f / (fSlow10 + 1.0f));
+		float fSlow12 = (1.0f - fSlow10);
+		float fSlow13 = (fConst2 * fSlow9);
+		float fSlow14 = std::sin(fSlow13);
+		float fSlow15 = std::cos(fSlow13);
+		float fSlow16 = (fSlow2 - fSlow7);
+		float fSlow17 = (0.5f * fSlow16);
+		float fSlow18 = (fConst3 * fSlow9);
+		float fSlow19 = (0.5f * fSlow8);
+		int iSlow20 = int((fConst0 / fSlow9));
+		float fSlow21 = float(iSlow20);
+		int iSlow22 = int((fSlow21 * ((iSlow3 == 1) ? 0.5f : fSlow8)));
+		int iSlow23 = (iSlow3 >= 4);
+		int iSlow24 = int((fSlow8 * fSlow21));
+		float fSlow25 = float((iSlow20 - iSlow24));
+		float fSlow26 = (1.0f / fSlow25);
+		float fSlow27 = (1.0f / float(iSlow24));
 		for (int i0 = 0; (i0 < count); i0 = (i0 + 1)) {
 			iVec0[0] = 1;
-			fRec2[0] = ((fSlow15 * fRec3[1]) + (fSlow16 * fRec2[1]));
-			fRec3[0] = ((float((1 - iVec0[1])) + (fSlow16 * fRec3[1])) - (fSlow15 * fRec2[1]));
+			fRec2[0] = ((fSlow14 * fRec3[1]) + (fSlow15 * fRec2[1]));
+			fRec3[0] = ((float((1 - iVec0[1])) + (fSlow15 * fRec3[1])) - (fSlow14 * fRec2[1]));
 			int iTemp0 = ((fRec2[1] <= 0.0f) & (fRec2[0] > 0.0f));
 			iRec4[0] = ((1103515245 * iRec4[1]) + 12345);
 			fRec1[0] = ((fRec1[1] * float((1 - iTemp0))) + (4.65661287e-10f * (float(iRec4[0]) * float(iTemp0))));
-			fRec0[0] = (0.0f - (fSlow12 * ((fSlow13 * fRec0[1]) - (fRec1[0] + fRec1[1]))));
-			fRec6[0] = (fSlow19 + (fRec6[1] - std::floor((fSlow19 + fRec6[1]))));
+			fRec0[0] = (0.0f - (fSlow11 * ((fSlow12 * fRec0[1]) - (fRec1[0] + fRec1[1]))));
+			fRec6[0] = (fSlow18 + (fRec6[1] - std::floor((fSlow18 + fRec6[1]))));
 			float fTemp1 = (ftbl0lfo_cvSIG0[int((65536.0f * fRec6[0]))] + 1.0f);
-			iRec9[0] = ((iVec0[1] + iRec9[1]) % iSlow21);
-			fRec8[0] = ((0.99000001f * fRec8[1]) + (0.00999999978f * float((iRec9[0] < iSlow23))));
-			fRec7[0] = ((0.99000001f * fRec7[1]) + (0.00999999978f * ((fSlow20 * fTemp1) + (fSlow17 * fRec8[0]))));
-			int iTemp2 = (iRec9[0] < iSlow25);
-			iRec11[0] = ((iRec11[1] + 1) % int(std::max<float>(1.0f, (fSlow26 * (0.0f - (float(iTemp2) + -1.0f))))));
-			iRec12[0] = ((iRec12[1] + 1) % std::max<int>(1, int((iSlow25 * iTemp2))));
-			fRec10[0] = ((0.99000001f * fRec10[1]) + (0.00999999978f * (iTemp2 ? (fSlow28 * float(iRec12[0])) : (1.0f - (fSlow27 * float(iRec11[0]))))));
-			fHbargraph0 = FAUSTFLOAT((fSlow1 + (fSlow2 * (iSlow5 ? (iSlow24 ? fSlow9 : fRec10[0]) : (iSlow6 ? fRec8[0] : (iSlow7 ? fRec7[0] : ((fSlow9 * std::min<float>(std::max<float>((0.5f * (fRec0[0] + 1.0f)), 0.0f), 1.0f)) + (fSlow18 * fTemp1))))))));
+			iRec9[0] = ((iVec0[1] + iRec9[1]) % iSlow20);
+			fRec8[0] = ((0.99000001f * fRec8[1]) + (0.00999999978f * float((iRec9[0] < iSlow22))));
+			fRec7[0] = ((0.99000001f * fRec7[1]) + (0.00999999978f * ((fSlow19 * fTemp1) + (fSlow16 * fRec8[0]))));
+			int iTemp2 = (iRec9[0] < iSlow24);
+			iRec11[0] = ((iRec11[1] + 1) % int(std::max<float>(1.0f, (fSlow25 * (0.0f - (float(iTemp2) + -1.0f))))));
+			iRec12[0] = ((iRec12[1] + 1) % std::max<int>(1, int((iSlow24 * iTemp2))));
+			fRec10[0] = ((0.99000001f * fRec10[1]) + (0.00999999978f * (iTemp2 ? (fSlow27 * float(iRec12[0])) : (1.0f - (fSlow26 * float(iRec11[0]))))));
+			fHbargraph0 = FAUSTFLOAT((fSlow0 * (fSlow1 + ((iSlow4 ? (iSlow23 ? fSlow8 : fRec10[0]) : (iSlow5 ? fRec8[0] : (iSlow6 ? fRec7[0] : ((fSlow8 * std::min<float>(std::max<float>((0.5f * (fRec0[0] + 1.0f)), 0.0f), 1.0f)) + (fSlow17 * fTemp1))))) + -0.5f))));
 			output0[i0] = FAUSTFLOAT(fHbargraph0);
 			iVec0[1] = iVec0[0];
 			fRec2[1] = fRec2[0];

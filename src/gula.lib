@@ -39,6 +39,13 @@ with {
 
 gula_lf_osc(freq, depth, shape) = blend * (1 - depth_min) + depth_min
 with {
+    blend = gula_lf_osc_normal(freq, shape);
+    depth_min = ba.lin2LogGain(1 - depth);
+    depthed = blend * (1 - depth_min) + depth_min;
+};
+
+gula_lf_osc_normal(freq, shape) = blend
+with {
     select = shape : int;
     b_amp = shape - floor(shape);
     a_amp = 1.0 - b_amp;
@@ -54,9 +61,6 @@ with {
     tri = gula_lf_tri(freq, a_amp) : si.smooth(0.99);
 
     blend = rand_sin, sin_square, impulse, tri, a_amp : ba.selectn(5, select);
-
-    depth_min = ba.lin2LogGain(1 - depth);
-    depthed = blend * (1 - depth_min) + depth_min;
 };
 
 gula_vibrato(freq, depth, offset) = de.fdelayltv(3, dmax, min(dmax, osc))
