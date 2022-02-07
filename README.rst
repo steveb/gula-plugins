@@ -105,6 +105,7 @@ The Shape control determines the LFO shape depending on the Mode:
 
 Random -> Sine:
 0, smoothed random values changing at the Rate
+0.5, a blend of random and sine wave
 1, a sine wave
 
 Sine -> Square
