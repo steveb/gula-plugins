@@ -123,5 +123,15 @@ Saw (asc) -> Tri -> Saw (desc)
 0.5, a triangle wave
 1, a descending saw wave
 
+Rectitude
+=========
+Combines two signals by fully rectifying both in opposite directions
+
+The first signal is rectified only passing positive values, and the second only
+passing negative values. When the same signal is used for both inputs then even
+harmonics can be produced by changing one of the gains. Other distortion effects
+can be achieved by mixing a dry and a distorted signal, or combining two
+distorted signals.
+
 .. _Faust installation: https://faust.grame.fr/doc/manual/index.html#compiling-and-installing-the-faust-compiler
 .. _MOD Devices: https://www.moddevices.com/

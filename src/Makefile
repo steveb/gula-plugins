@@ -1,4 +1,4 @@
-plugins := vibey.lv2 splits.lv2 fades.lv2 ssap_tone.lv2 sweabed.lv2 pequed.lv2 peak_audio_to_cv.lv2 lfo_cv.lv2
+plugins := vibey.lv2 splits.lv2 fades.lv2 ssap_tone.lv2 sweabed.lv2 pequed.lv2 peak_audio_to_cv.lv2 lfo_cv.lv2 rectitude.lv2
 
 URI_PREFIX = https://github.com/steveb/gula-plugins
 

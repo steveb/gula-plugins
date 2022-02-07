@@ -1,0 +1,26 @@
+@prefix modgui: <http://moddevices.com/ns/modgui#> .
+@prefix lv2:    <http://lv2plug.in/ns/lv2core#> .
+
+<https://github.com/steveb/gula-plugins/rectitude>
+    modgui:gui [
+        modgui:resourcesDirectory <modgui> ;
+        modgui:iconTemplate <modgui/icon-rectitude.html> ;
+        modgui:stylesheet <modgui/stylesheet-rectitude.css> ;
+        modgui:screenshot <modgui/screenshot-rectitude.png> ;
+        modgui:thumbnail <modgui/thumbnail-rectitude.png> ;
+        modgui:brand "GULA" ;
+        modgui:label "Rectitude" ;
+        modgui:model "boxy" ;
+        modgui:panel "2-knobs" ;
+        modgui:color "black" ;
+        modgui:knob "black" ;
+        modgui:port [
+            lv2:index 0 ;
+            lv2:symbol "gain_up_0" ;
+            lv2:name "Gain Up" ;
+        ] , [
+            lv2:index 1 ;
+            lv2:symbol "gain_down_1" ;
+            lv2:name "Gain Down" ;
+        ] ;
+    ] .
