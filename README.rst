@@ -97,5 +97,30 @@ CV output value derived from the amplitude of the input, with auto-detection of 
 Attack and Release determine how fast the output value changes. The Peak Decay determines how quickly the
 detected peak value decays back to zero.
 
+LFO CV
+======
+A CV output of an LFO with multiple shape modes and shapes
+
+The Shape control determines the LFO shape depending on the Mode:
+
+Random -> Sine:
+0, smoothed random values changing at the Rate
+1, a sine wave
+
+Sine -> Square
+0, a sine wave
+0.5, a blend of sine and square
+1, a square wave
+
+Impulse -> Square -> Pulse
+0, an impulse
+0.5, a square wave
+1, a pulse (on until the end of the cycle, then off)
+
+Saw (asc) -> Tri -> Saw (desc)
+0, an ascending saw wave
+0.5, a triangle wave
+1, a descending saw wave
+
 .. _Faust installation: https://faust.grame.fr/doc/manual/index.html#compiling-and-installing-the-faust-compiler
 .. _MOD Devices: https://www.moddevices.com/

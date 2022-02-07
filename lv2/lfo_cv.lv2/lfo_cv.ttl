@@ -17,7 +17,30 @@
        lv2:optionalFeature epp:supportsStrictBounds ;
        lv2:optionalFeature lv2:hardRTCapable ;
        doap:maintainer [ foaf:name "Gula Plugins" ] ;
-       rdfs:comment "A CV output of an LFO with multiple shape modes and shapes" ;
+       rdfs:comment """
+A CV output of an LFO with multiple shape modes and shapes
+
+The Shape control determines the LFO shape depending on the Mode:
+
+Random -> Sine:
+0, smoothed random values changing at the Rate
+1, a sine wave
+
+Sine -> Square
+0, a sine wave
+0.5, a blend of sine and square
+1, a square wave
+
+Impulse -> Square -> Pulse
+0, an impulse
+0.5, a square wave
+1, a pulse (on until the end of the cycle, then off)
+
+Saw (asc) -> Tri -> Saw (desc)
+0, an ascending saw wave
+0.5, a triangle wave
+1, a descending saw wave
+""" ;
        doap:revision "1.0.0" ;
        doap:license "GPLv3" ;
     lv2:port [
