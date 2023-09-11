@@ -1,4 +1,5 @@
 
+an = library("analyzers.lib");
 ba = library("basics.lib");
 fi = library("filters.lib");
 ma = library("maths.lib");
@@ -6,6 +7,7 @@ si = library("signals.lib");
 no = library("noises.lib");
 os = library("oscillators.lib");
 de = library("delays.lib");
+ef = library("misceffects.lib");
 
 clamp(low, high, n) = min(max(n, low), high);
 
@@ -101,4 +103,11 @@ with {
     range_max = an.amp_follower(peak_decay, n),0.01 : max : si.smooth(0.999) : hbargraph("range", 0, 1) ;
     ab_mult = 1.0 / range_max;
     ab_amp_scaled = scale(0, ab_mult, ab_amp) : clamp(0, 1) : hbargraph("sweep", 0, 1);
+};
+
+gula_amp = an.amp_follower(0.05) : si.smooth(0.95);
+
+gula_freq(n) = pitch
+with {
+    pitch = ef.gate_mono(-30, 0, 0, 0, n) : an.pitchTracker(2, 0.03);
 };
