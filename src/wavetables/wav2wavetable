@@ -1,0 +1,122 @@
+#!/usr/bin/env python
+
+import argparse
+import os
+import re
+import sys
+
+from scipy.io import wavfile
+
+
+LIB_TEMPLATE_START = """
+
+wave_tables = waveform{"""
+
+LIB_TEMPLATE_END = """
+}};
+wave_file_index = nentry("wavetable[name: Wavetable][style:menu{{{wave_table_menu}}}]",0,0,{wave_table_menu_max},1);
+wave_file_offset = {wave_file_offsets} : ba.selectn({wave_file_count}, wave_file_index);
+wave_table_count = {wave_table_counts} : ba.selectn({wave_file_count}, wave_file_index);
+"""
+
+args = None
+
+
+def buildargs():
+    global args
+    parser = argparse.ArgumentParser(
+        description="Convert wav files to Faust waveform source libraries.",
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+    )
+    parser.add_argument(
+        "args",
+        metavar="<file path>",
+        nargs="*",
+        help="Path to wav files",
+    )
+    parser.add_argument(
+        "--name",
+        "-n",
+        metavar="<file path>",
+        required=True,
+        help="Name of wavetable collection, must be a valid faust identifier",
+    )
+    parser.add_argument(
+        "--output-path",
+        "-o",
+        metavar="<file path>",
+        required=True,
+        help="Path to .dsp file to write to, overwriting any previous.",
+    )
+
+    args = parser.parse_args(sys.argv[1:])
+
+
+def slugify(s):
+    s = s.lower().strip()
+    s = re.sub(r"[^\w\s-]", "", s)
+    s = re.sub(r"[\s_-]+", "_", s)
+    s = re.sub(r"^-+|-+$", "", s)
+    return s
+
+
+def wavdata(wav_file):
+    samplerate, data = wavfile.read(wav_file)
+    if data.dtype == "int16":
+        data = data.astype("float32") / 32767.0
+    elif data.dtype == "int32":
+        data = data.astype("float32") / 2147483647.0
+    elif data.dtype == "float":
+        data = data.astype("float32")
+    elif data.dtype == "float32":
+        pass
+    else:
+        raise Exception("Cannot handle data type %s" % data.dtype)
+    return data
+
+
+def wav_to_waveform(f, wave_name, data, offset):
+    data_length = len(data)
+    for i, d in enumerate(data.astype(str)):
+        if not i % 2048:
+            frame_number = i // 2048
+            f.write(f"\n    // {wave_name} {frame_number}\n")
+        if not i % 4:
+            f.write("\n    ")
+        f.write(d)
+        f.write(", ")
+    return data_length
+
+
+def create_waveforms():
+    dsp_file = os.path.abspath(args.output_path)
+    with open(dsp_file, mode="w+") as f:
+        f.write(LIB_TEMPLATE_START)
+        offset = 0
+        wave_file_offsets = []
+        wave_table_counts = []
+        wave_table_menu = []
+        wave_file_count = len(args.args)
+        for i, wav_file in enumerate(args.args):
+            wave_name = os.path.splitext(os.path.basename(wav_file))[0]
+            wave_table_menu.append(f"'{wave_name}':{i}")
+            data = wavdata(wav_file)
+            wave_file_offsets.append(str(offset))
+            data_length = wav_to_waveform(f, wave_name, data, offset)
+            wave_table_counts.append(str(data_length // 2048))
+            offset += data_length
+
+        f.write(
+            LIB_TEMPLATE_END.format(
+                wave_table_menu=";".join(wave_table_menu),
+                wave_table_menu_max=str(wave_file_count - 1),
+                wave_file_offsets=",".join(wave_file_offsets),
+                wave_file_count=str(wave_file_count),
+                wave_table_counts=",".join(wave_table_counts),
+            )
+        )
+
+
+if __name__ == "__main__":
+    buildargs()
+    create_waveforms()
