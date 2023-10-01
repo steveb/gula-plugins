@@ -1,7 +1,7 @@
 /* ------------------------------------------------------------
 name: "triangle"
-Code generated with Faust 2.50.6 (https://faust.grame.fr)
-Compilation options: -a /usr/local/share/faust/lv2.cpp -lang cpp -i -cn triangle -es 1 -mcd 16 -single -ftz 0
+Code generated with Faust 2.68.0 (https://faust.grame.fr)
+Compilation options: -a /usr/local/share/faust/lv2.cpp -lang cpp -i -ct 1 -cn triangle -es 1 -mcd 16 -single -ftz 0
 ------------------------------------------------------------ */
 
 #ifndef  __triangle_H__
@@ -73,32 +73,42 @@ Compilation options: -a /usr/local/share/faust/lv2.cpp -lang cpp -i -cn triangle
 
 #include <string>
 #include <vector>
+#include <cstdint>
 
 /************************************************************************
- ************************************************************************
-    FAUST compiler
-    Copyright (C) 2003-2018 GRAME, Centre National de Creation Musicale
-    ---------------------------------------------------------------------
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
- ************************************************************************
- ************************************************************************/
+ FAUST Architecture File
+ Copyright (C) 2003-2022 GRAME, Centre National de Creation Musicale
+ ---------------------------------------------------------------------
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU Lesser General Public License as published by
+ the Free Software Foundation; either version 2.1 of the License, or
+ (at your option) any later version.
+ 
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ GNU Lesser General Public License for more details.
+ 
+ You should have received a copy of the GNU Lesser General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ 
+ EXCEPTION : As a special exception, you may create a larger work
+ that contains this FAUST architecture section and distribute
+ that work under terms of your choice, so long as this FAUST
+ architecture section is not modified.
+ ***************************************************************************/
 
 #ifndef __export__
 #define __export__
 
-#define FAUSTVERSION "2.50.6"
+// Version as a global string
+#define FAUSTVERSION "2.68.0"
+
+// Version as separated [major,minor,patch] values
+#define FAUSTMAJORVERSION 2
+#define FAUSTMINORVERSION 68
+#define FAUSTPATCHVERSION 0
 
 // Use FAUST_API for code that is part of the external API but is also compiled in faust and libfaust
 // Use LIBFAUST_API for code that is compiled in faust and libfaust
@@ -146,7 +156,7 @@ struct FAUST_API dsp_memory_manager {
      * Inform the Memory Manager with the number of expected memory zones.
      * @param count - the number of expected memory zones
      */
-    virtual void begin(size_t count) {}
+    virtual void begin(size_t /*count*/) {}
     
     /**
      * Give the Memory Manager information on a given memory zone.
@@ -154,8 +164,8 @@ struct FAUST_API dsp_memory_manager {
      * @param reads - the number of Read access to the zone used to compute one frame
      * @param writes - the number of Write access to the zone used to compute one frame
      */
-    virtual void info(size_t size, size_t reads, size_t writes) {}
-    
+    virtual void info(size_t /*size*/, size_t /*reads*/, size_t /*writes*/) {}
+
     /**
      * Inform the Memory Manager that all memory zones have been described,
      * to possibly start a 'compute the best allocation strategy' step.
@@ -316,16 +326,37 @@ class FAUST_API dsp_factory {
     
     public:
     
+        /* Return factory name */
         virtual std::string getName() = 0;
+    
+        /* Return factory SHA key */
         virtual std::string getSHAKey() = 0;
+    
+        /* Return factory expanded DSP code */
         virtual std::string getDSPCode() = 0;
+    
+        /* Return factory compile options */
         virtual std::string getCompileOptions() = 0;
+    
+        /* Get the Faust DSP factory list of library dependancies */
         virtual std::vector<std::string> getLibraryList() = 0;
+    
+        /* Get the list of all used includes */
         virtual std::vector<std::string> getIncludePathnames() = 0;
     
+        /* Get warning messages list for a given compilation */
+        virtual std::vector<std::string> getWarningMessages() = 0;
+    
+        /* Create a new DSP instance, to be deleted with C++ 'delete' */
         virtual dsp* createDSPInstance() = 0;
     
+        /* Static tables initialization, possibly implemened in sub-classes*/
+        virtual void classInit(int sample_rate) {};
+    
+        /* Set a custom memory manager to be used when creating instances */
         virtual void setMemoryManager(dsp_memory_manager* manager) = 0;
+    
+        /* Return the currently set custom memory manager */
         virtual dsp_memory_manager* getMemoryManager() = 0;
     
 };
@@ -467,8 +498,8 @@ struct FAUST_API UIReal {
     
     // -- metadata declarations
     
-    virtual void declare(REAL* zone, const char* key, const char* val) {}
-    
+    virtual void declare(REAL* /*zone*/, const char* /*key*/, const char* /*val*/) {}
+
     // To be used by LLVM client
     virtual int sizeOfFAUSTFLOAT() { return sizeof(FAUSTFLOAT); }
 };
@@ -782,26 +813,28 @@ class triangle : public dsp {
 	
  private:
 	
+	int iVec0[2];
 	FAUSTFLOAT fHslider0;
 	int fSampleRate;
 	float fConst0;
 	float fRec0[2];
 	
  public:
-	
+	triangle() {}
+
 	void metadata(Meta* m) { 
-		m->declare("compile_options", "-a /usr/local/share/faust/lv2.cpp -lang cpp -i -cn triangle -es 1 -mcd 16 -single -ftz 0");
+		m->declare("compile_options", "-a /usr/local/share/faust/lv2.cpp -lang cpp -i -ct 1 -cn triangle -es 1 -mcd 16 -single -ftz 0");
 		m->declare("filename", "triangle.dsp");
 		m->declare("maths.lib/author", "GRAME");
 		m->declare("maths.lib/copyright", "GRAME");
 		m->declare("maths.lib/license", "LGPL with exception");
 		m->declare("maths.lib/name", "Faust Math Library");
-		m->declare("maths.lib/version", "2.5");
+		m->declare("maths.lib/version", "2.6.0");
 		m->declare("name", "triangle");
 		m->declare("oscillators.lib/name", "Faust Oscillator Library");
-		m->declare("oscillators.lib/version", "0.3");
+		m->declare("oscillators.lib/version", "1.4.0");
 		m->declare("platform.lib/name", "Generic Platform Library");
-		m->declare("platform.lib/version", "0.2");
+		m->declare("platform.lib/version", "1.3.0");
 	}
 
 	virtual int getNumInputs() {
@@ -820,16 +853,19 @@ class triangle : public dsp {
 	
 	virtual void instanceConstants(int sample_rate) {
 		fSampleRate = sample_rate;
-		fConst0 = 1.0f / std::min<float>(1.92e+05f, std::max<float>(1.0f, float(fSampleRate)));
+		fConst0 = 55.0f / std::min<float>(1.92e+05f, std::max<float>(1.0f, float(fSampleRate)));
 	}
 	
 	virtual void instanceResetUserInterface() {
-		fHslider0 = FAUSTFLOAT(4.4e+02f);
+		fHslider0 = FAUSTFLOAT(2.25f);
 	}
 	
 	virtual void instanceClear() {
 		for (int l0 = 0; l0 < 2; l0 = l0 + 1) {
-			fRec0[l0] = 0.0f;
+			iVec0[l0] = 0;
+		}
+		for (int l1 = 0; l1 < 2; l1 = l1 + 1) {
+			fRec0[l1] = 0.0f;
 		}
 	}
 	
@@ -837,6 +873,7 @@ class triangle : public dsp {
 		classInit(sample_rate);
 		instanceInit(sample_rate);
 	}
+	
 	virtual void instanceInit(int sample_rate) {
 		instanceConstants(sample_rate);
 		instanceResetUserInterface();
@@ -853,16 +890,20 @@ class triangle : public dsp {
 	
 	virtual void buildUserInterface(UI* ui_interface) {
 		ui_interface->openVerticalBox("triangle");
-		ui_interface->addHorizontalSlider("freq", &fHslider0, FAUSTFLOAT(4.4e+02f), FAUSTFLOAT(5e+01f), FAUSTFLOAT(2e+03f), FAUSTFLOAT(0.01f));
+		ui_interface->declare(&fHslider0, "name", "Frequency");
+		ui_interface->addHorizontalSlider("freq", &fHslider0, FAUSTFLOAT(2.25f), FAUSTFLOAT(0.0f), FAUSTFLOAT(1e+01f), FAUSTFLOAT(0.001f));
 		ui_interface->closeBox();
 	}
 	
 	virtual void compute(int count, FAUSTFLOAT** RESTRICT inputs, FAUSTFLOAT** RESTRICT outputs) {
 		FAUSTFLOAT* output0 = outputs[0];
-		float fSlow0 = fConst0 * float(fHslider0);
+		float fSlow0 = fConst0 * std::pow(2.0f, float(fHslider0));
 		for (int i0 = 0; i0 < count; i0 = i0 + 1) {
-			fRec0[0] = fSlow0 + (fRec0[1] - std::floor(fSlow0 + fRec0[1]));
-			output0[i0] = FAUSTFLOAT(ftbl0triangleSIG0[int(8.0f * fRec0[0])]);
+			iVec0[0] = 1;
+			float fTemp0 = ((1 - iVec0[1]) ? 0.0f : fSlow0 + fRec0[1]);
+			fRec0[0] = fTemp0 - std::floor(fTemp0);
+			output0[i0] = FAUSTFLOAT(ftbl0triangleSIG0[std::max<int>(0, std::min<int>(int(8.0f * fRec0[0]), 7))]);
+			iVec0[1] = iVec0[0];
 			fRec0[1] = fRec0[0];
 		}
 	}
@@ -2217,12 +2258,11 @@ instantiate(const LV2_Descriptor*     descriptor,
 	plugin->map->map(plugin->map->handle, MIDI_EVENT_URI);
     }
   }
+	
   if (!plugin->map) {
     fprintf
-      (stderr, "%s: host doesn't support urid:map, giving up\n",
+      (stderr, "%s: host doesn't support urid:map. MIDI will not be supported.\n",
        PLUGIN_URI);
-    delete plugin;
-    return 0;
   }
   return (LV2_Handle)plugin;
 }
