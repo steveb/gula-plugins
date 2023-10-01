@@ -54,6 +54,10 @@ else
 	# Faust installation not found, using pre-generated $@
 endif
 
+%: %.dsp
+	set -x
+	faust2alsa $<
+
 split-slider.png: split-slider.py
 	./split-slider.py $@
 	cp $@ ../lv2/splits.lv2/modgui/
